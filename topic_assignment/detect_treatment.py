@@ -43,7 +43,7 @@ class TreatmentDetector(object):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--posts', '-p', type=argparse.FileType('r'), default=sys.stdin)
-    parser.add_argument('--definitons', '-d', type=argparse.FileType('r'), default='treatment_definitons.txt')
+    parser.add_argument('--definitons', '-d', type=argparse.FileType('r'), default='data/treatment_definitons.txt')
     parser.add_argument('--output', '-o', type=argparse.FileType('w'), default=sys.stdout)
     return parser.parse_args()
 

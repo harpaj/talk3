@@ -7,7 +7,7 @@ import atexit
 
 class Talk3Pipeline(object):
     def __init__(self):
-        self.fh = open("talk3_posts.csv", "w")
+        self.fh = open("../data/talk3_posts.csv", "w")
         fields = [
             "subforum", "post_id", "text", "timestamp", "author_id", "url",
             "thread_id", "position_in_thread", "agrees"]
