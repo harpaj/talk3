@@ -1,17 +1,40 @@
-aripiprazole
-acamprosate
-mutebutton
-retigabine
-gabapentin
-steroids
-supplements
-clonazepan
-soundcure
-am101
-neuromodulaton
-cannabis
-lllt
+acamprosate, campral
 acupuncture
-betahistine
-neuromonics
+am101
+antidepressant, antidepressants, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
+aripiprazole, abilify
+betahistine, betaserc, veserc, serc, hiserk, vergo
+cannabis, marijuana, cbd, cbds, cannabidiol
+carbamazepine, tegretol, equetro
+cinnarizine, stugeron
+clonazepan, klonopin, rivotril
+cognitive behavioural therapy, cbt
+flumazenil
+flupirtine
+gabapentin, neurontin
+ginkgo, biloba
+hyperbaric oxygen therapy, hyperbaric, hbot, hbo
+lidocaine, dexamethasone
+lipoflavonoid
+lllt, laser
 magnesium
+masking, masker, maskers
+melatonin
+melizine, postafen, bonine
+mutebutton
+nacetylcysteine, nac
+namenda, memantine
+neuromodulation, neuromodulator, anm
+neuromonics
+notched music therapy, notched, nmt, audionotch
+otoharmonics
+pregabalin, lyrica
+retigabine, trobalt, potiga
+saffron
+salustim, tvns
+soundcure, serenade
+steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone
+tinnintus retraining therapy, trt, retraining
+topiramate, topamax
+transcranial stimulation, rtms, tdcs, tacs
+zinc
