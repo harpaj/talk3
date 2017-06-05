@@ -7,11 +7,11 @@ betahistine, betaserc, veserc, serc, hiserk, vergo
 cannabis, marijuana, cbd, cbds, cannabidiol
 carbamazepine, tegretol, equetro
 cinnarizine, stugeron
-clonazepan, klonopin, rivotril
+clonazepam, klonopin, rivotril
 cognitive behavioural therapy, cbt
 flumazenil
 flupirtine
-gabapentin, neurontin
+gabapentin, neurontin,gaba
 ginkgo, biloba
 hyperbaric oxygen therapy, hyperbaric, hbot, hbo
 lidocaine, dexamethasone
@@ -33,8 +33,16 @@ retigabine, trobalt, potiga
 saffron
 salustim, tvns
 soundcure, serenade
-steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone
+steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone,dexamethasone and lidocaine
 tinnintus retraining therapy, trt, retraining
 topiramate, topamax
-transcranial stimulation, rtms, tdcs, tacs
+transcranial stimulation, rtms, tdcs, tacs,repeat transcranial magnetic stimulation
 zinc
+clear tinnitus
+cranial therapy
+magnesium citrate
+magnesium chloride
+neramexane
+b12,ginko
+ssri
+zolpidem,ambien
