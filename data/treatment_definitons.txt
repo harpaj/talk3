@@ -4,7 +4,7 @@ am101
 antidepressant, antidepressants, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
 aripiprazole, abilify
 betahistine, betaserc, veserc, serc, hiserk, vergo
-cannabis, marijuana, cbd, cbds, cannabidiol
+cannabis, marijuana, cbd, cbds, cannabidiol,thc,tetrahydrocannabinol,hemp
 carbamazepine, tegretol, equetro
 cinnarizine, stugeron
 clonazepam, klonopin, rivotril
@@ -12,7 +12,7 @@ cognitive behavioural therapy, cbt
 flumazenil
 flupirtine
 gabapentin, neurontin,gaba
-ginkgo, biloba
+ginkgo, biloba,ginko
 hyperbaric oxygen therapy, hyperbaric, hbot, hbo
 lidocaine, dexamethasone
 lipoflavonoid
@@ -32,7 +32,7 @@ pregabalin, lyrica
 retigabine, trobalt, potiga
 saffron
 salustim, tvns
-soundcure, serenade
+soundcure, serenade, universal sound therapy
 steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone,dexamethasone and lidocaine
 tinnintus retraining therapy, trt, retraining
 topiramate, topamax
@@ -43,6 +43,16 @@ cranial therapy
 magnesium citrate
 magnesium chloride
 neramexane
-b12,ginko
+b12
 ssri
 zolpidem,ambien
+levetiracetam,keppra
+radio frequency therapy
+acoustic coordinated reset neuromodulation
+caroverine
+thiamine pyrophosphate,tpp
+homeopathy
+earplanes,earplane
+valerian,chamomile
+tebonin
+back to silence method
