@@ -7,7 +7,6 @@ import sys
 import itertools as it
 from collections import Counter
 from pprint import pprint
-import logging
 
 import nltk
 
@@ -21,9 +20,9 @@ class TreatmentDetector(object):
         self.writer.writeheader()
         self.punctuation_translator = str.maketrans('', '', string.punctuation)
         self.sentence_detector = nltk.data.load('tokenizers/punkt/english.pickle')
-        self.found_treatments = Counter()
         self.treatment_set, self.treatment_mapping, self.max_treatment_length =\
             self.parse_treatment_definitons(args.definitons)
+        self.found_treatments = Counter()
 
     def parse_treatment_definitons(self, definion_file):
         treatment_set = set()

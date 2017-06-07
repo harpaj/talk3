@@ -1,58 +1,49 @@
 acamprosate, campral
+acoustic cr neuromodulation, acoustic coordinated reset neuromodulation,  neuromodulation, neuromodulator, anm, acrn, acm
 acupuncture
-am101
-antidepressant, antidepressants, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
+AM-101, am 101
+antidepressant, antidepressants, ssri, ssris, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
 aripiprazole, abilify
+back to silence, back-to-silence
 betahistine, betaserc, veserc, serc, hiserk, vergo
-cannabis, marijuana, cbd, cbds, cannabidiol,thc,tetrahydrocannabinol,hemp
+cannabis, marijuana, cbd, cbds, cannabidiol, thc, tetrahydrocannabinol, hemp
 carbamazepine, tegretol, equetro
+caroverine, spasmium, spadon, tinnex
 cinnarizine, stugeron
 clonazepam, klonopin, rivotril
 cognitive behavioural therapy, cbt
+cranial therapy, cranial osteopathy, head massage
+earplanes,earplane
 flumazenil
 flupirtine
-gabapentin, neurontin,gaba
-ginkgo, biloba,ginko
+gabapentin, neurontin, gaba
+ginkgo, biloba, ginko, tebonin
 hyperbaric oxygen therapy, hyperbaric, hbot, hbo
+levetiracetam,keppra
 lidocaine, dexamethasone
 lipoflavonoid
-lllt, laser
-magnesium
+low-level laser therapy, lllt, laser
+magnesium, magnesium citrate, magnesium chloride
 masking, masker, maskers
 melatonin
 melizine, postafen, bonine
 mutebutton
 nacetylcysteine, nac
 namenda, memantine
-neuromodulation, neuromodulator, anm, acrn, acm
+neramexane
 neuromonics
-notched music therapy, notched, nmt, audionotch
+notched music therapy, music therapy, notched, nmt, audionotch
 otoharmonics
 pregabalin, lyrica
 retigabine, trobalt, potiga
 saffron
 salustim, tvns
 soundcure, serenade, universal sound therapy
-steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone,dexamethasone and lidocaine
+steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone, lidocaine
+thiamine pyrophosphate, tpp
 tinnintus retraining therapy, trt, retraining
 topiramate, topamax
-transcranial stimulation, rtms, tdcs, tacs,repeat transcranial magnetic stimulation
+transcranial magnetic stimulation, transcranial stimulation, rtms, tms, tdcs, tacs
+Vitamin B12, b12
 zinc
-clear tinnitus
-cranial therapy
-magnesium citrate
-magnesium chloride
-neramexane
-b12
-ssri
-zolpidem,ambien
-levetiracetam,keppra
-radio frequency therapy
-acoustic coordinated reset neuromodulation
-caroverine
-thiamine pyrophosphate,tpp
-homeopathy
-earplanes,earplane
-valerian,chamomile
-tebonin
-back to silence method
+zolpidem, ambien
