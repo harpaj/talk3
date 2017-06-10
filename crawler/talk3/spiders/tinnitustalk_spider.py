@@ -6,6 +6,7 @@ from scrapy.selector import Selector
 
 from lxml import html, etree
 import re
+from datetime import datetime
 
 from talk3.items import PostItem
 
@@ -75,13 +76,15 @@ class TinnitusTalkSpider(CrawlSpider):
         ).group(1)
 
         posts = sel.css(".messageList .message")
-
         for post in posts:
             p = PostItem()
             p["subforum"] = subforum
             p["post_id"] = post.xpath('@id').extract_first()
             p["text"] = self.clean_text(post.css(".messageText").extract_first())
-            p["timestamp"] = post.css('.DateTime').xpath('@title').extract_first()
+            timestring = post.css('.DateTime').xpath('@title').extract_first()
+            timestring = timestring or post.css('.DateTime ::text').extract_first()
+            timestring = datetime.strptime(timestring, "%b %d, %Y at %I:%M %p")
+            p["timestamp"] = timestring.isoformat()
             author = post.css('.username').xpath('@href').extract_first()
             p["author_id"] = author[8:-1] if author else "GUEST-" + p["post_id"]
             p["url"] = post.css(".publicControls a").xpath('@href').extract_first()
