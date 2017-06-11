@@ -1,3 +1,5 @@
 scrapy
 lxml
 nltk
+pandas
+bokeh
