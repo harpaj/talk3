@@ -1,27 +1,13 @@
+import logging
+
 import tornado.ioloop
 import tornado.web
 import tornado.options
 
 from common.data_manager import DataManager
 from common.graph_drawer import GraphDrawer
-
-
-class MainHandler(tornado.web.RequestHandler):
-    def set_default_headers(self):
-        self.set_header("Access-Control-Allow-Origin", "*")
-        self.set_header("Access-Control-Allow-Headers", "x-requested-with")
-        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
-
-    def get(self):
-        script, div = self.application.gd.get_graph_embed_data()
-        self.finish({
-            "script": script[32:-9],
-            "div": div
-        })
-
-    def options(self):
-        self.set_status(204)
-        self.finish()
+from handlers.treatment_frequency_graph import TreatmentFrequencyGraphHandler
+from handlers.treatment_summary import TreatmentSummaryHandler
 
 
 class VisApplication(tornado.web.Application):
@@ -33,7 +19,8 @@ class VisApplication(tornado.web.Application):
 
 def make_app():
     return VisApplication([
-        (r"/", MainHandler)
+        (r"/graphs/treatment_frequency", TreatmentFrequencyGraphHandler),
+        (r"/treatment_summary", TreatmentSummaryHandler)
     ])
 
 
@@ -41,4 +28,6 @@ if __name__ == "__main__":
     tornado.options.parse_config_file("config.cfg")
     app = make_app()
     app.listen(8765)
+    tornado.ioloop.IOLoop.current().set_blocking_log_threshold(0.05)
     tornado.ioloop.IOLoop.current().start()
+    logging.info("API listening on port 8765")

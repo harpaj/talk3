@@ -1,3 +1,5 @@
+import logging
+
 from bokeh.charts import Area
 from bokeh.palettes import Inferno11
 from bokeh.models import Range1d
@@ -8,10 +10,12 @@ import numpy as np
 class GraphDrawer(object):
     def __init__(self, data_manager):
         self.dm = data_manager
+        self.summary_graph = self.get_graph_embed_data()
+        logging.info("All graph data prepared")
 
     def get_graph_embed_data(self):
         area = Area(
-            self.dm.data_month_crosstab(),
+            self.dm.data_month_crosstab,
             x_range=Range1d(np.datetime64('2011', 'Y'), np.datetime64('2018', 'Y'), bounds='auto'),
             tools='xwheel_zoom,xpan,reset,save',
             active_scroll='xwheel_zoom',
