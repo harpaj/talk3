@@ -16,3 +16,7 @@ ENDPOINT: getTreatmentSummaries
     - frequency rank, trend
 # request:
     - no arguments 
+
+
+
+check why lidocaine has no matches

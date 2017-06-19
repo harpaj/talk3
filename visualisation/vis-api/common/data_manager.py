@@ -32,7 +32,7 @@ class DataManager(object):
     def prepare_treatment_definitons():
         treatment_mapping = {}
         with open("/home/johannes/talk3/data/treatment_definitons.txt", 'r') as fh:
-            reader = csv.reader(fh)
+            reader = csv.reader(fh, skipinitialspace=True)
             for line in reader:
                 treatment_mapping[line[0]] = line[1:]
         return treatment_mapping

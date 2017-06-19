@@ -28,6 +28,6 @@ if __name__ == "__main__":
     tornado.options.parse_config_file("config.cfg")
     app = make_app()
     app.listen(8765)
+    logging.info("API listening on port 8765")
     tornado.ioloop.IOLoop.current().set_blocking_log_threshold(0.05)
     tornado.ioloop.IOLoop.current().start()
-    logging.info("API listening on port 8765")

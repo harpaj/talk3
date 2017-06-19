@@ -1,0 +1,27 @@
+<template>
+<div class="search-area">
+  <input type="search" id="search" placeholder="Search..." value.bind="filter" input.delegate="filterTreatments()"/>
+</div>
+<div class="treatment-results">
+  <ul class="treatments">
+    <li repeat.for="treatment of treatments" class="treatment-item">
+      <a class="treatment-link" href="">
+        <div class="pure-g">
+          <div class="treatment-column pure-u-1-3">
+            <p class="treatment-name">${treatment.treatment}</p>
+            <p class="treatment-names">${treatment.names.join(', ')}</p>
+          </div>
+          <div class="treatment-column rank pure-u-1-3">
+            <p class="treatment-rating">79%</p>
+            <p class="explanation">positive mentions in the last 12 months</p>
+          </div>
+          <div class="treatment-column rank pure-u-1-3">
+            <p class="treatment-rating">${treatment.last_year_cnt}</p>
+            <p class="explanation">total mentions in the last 12 months</p>
+          </div>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+</template>
