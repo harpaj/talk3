@@ -6,6 +6,20 @@ import pandas
 import numpy as np
 
 
+sent_mapping = {
+    "pos": 1,
+    "neu": 0,
+    "neg": -1
+}
+
+factuality_weight = {
+    "yes": 1,
+    "no": 0.2
+}
+
+agree_weight = 0.5
+
+
 class DataManager(object):
     def __init__(self):
         self.df = self.prepare_initial_dataframe()
@@ -19,13 +33,23 @@ class DataManager(object):
         df = pandas.read_csv(
             open("/home/johannes/talk3/data/treatment_detected_linewise.csv", 'r'),
             usecols=[
-                'subforum', 'post_id', 'timestamp', 'sentence', 'treatments', 'thread_id'
+                'subforum', 'post_id', 'timestamp', 'sentence', 'treatments', 'thread_id',
+                'sentiment', 'factuality', 'agrees'
             ],
             index_col=None,
             parse_dates=['timestamp'],
             infer_datetime_format=True
         )
+        df = df.drop_duplicates()
+
+        # calculate some initial values
         df['month'] = df['timestamp'].values.astype('<M8[M]')
+        df['sentiment'] = sent_mapping[df['sentiment']]
+        df['weight'] = df.apply(
+            lambda s: factuality_weight[s['factuality']] * (1 + (s['agrees'] * agree_weight)),
+            axis=1
+        )
+        df["weighted_sentiment"] = df["weight"] * df["sentiment"]
         return df
 
     @staticmethod
@@ -39,13 +63,19 @@ class DataManager(object):
 
     def prepare_treatment_summaries(self):
         treatment_summaries = {}
+
+        # precalculate some values common to all treatments
         one_year_ago = np.datetime64(datetime.now(), 'D') - np.timedelta64(365, 'D')
         two_years_ago = one_year_ago - np.timedelta64(365, 'D')
         last_year_total = len(self.df[self.df["timestamp"] > one_year_ago])
         previous_year_total = len(self.df[
             (self.df["timestamp"] > two_years_ago) & (self.df["timestamp"] < one_year_ago)])
+
+        # create groups of mentions per treatment, iterate
         for label, group in self.df.groupby("treatments"):
             data = {"names": self.treatment_mapping[label]}
+
+            # frequency statistics
             data["last_year_cnt"] = len(group[
                 group["timestamp"] > one_year_ago
             ])
@@ -55,6 +85,23 @@ class DataManager(object):
             data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
             data["last_year_%"] = data["last_year_cnt"] / last_year_total
             data["previous_year_%"] = data["previous_year_cnt"] / previous_year_total
+
+            # sentiment statistics
+            # summarise the treatment sentiment on a post level
+            def post_group(group):
+                group["sentiment"] = group["weighted_sentiment"].sum() / group["weight"].sum()
+                group["weight"] = group["weight"].max()
+                return group
+
+            post_scores = group.groupby('post_id')[
+                ['post_id', 'month', 'weight', 'weighted_sentiment']
+            ].apply(post_group).drop_duplicates()
+            post_scores["weighted_sentiment"] = post_scores["weight"] * post_scores["sentiment"]
+
+            # summarise these posts per month
+            data["sentiment_per_month_df"] = post_scores.groupby('month').apply(
+                lambda r: r["weighted_sentiment"].sum() / r["weight"].sum())
+
             treatment_summaries[label] = data
         for rank, treatment in enumerate(sorted(
             treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
