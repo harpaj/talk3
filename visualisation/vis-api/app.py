@@ -7,6 +7,8 @@ import tornado.options
 from common.data_manager import DataManager
 from common.graph_drawer import GraphDrawer
 from handlers.treatment_frequency_graph import TreatmentFrequencyGraphHandler
+from handlers.treatment_details_graph import TreatmentDetailsGraphHandler
+from handlers.treatment_details import TreatmentDetailsHandler
 from handlers.treatment_summary import TreatmentSummaryHandler
 
 
@@ -20,6 +22,8 @@ class VisApplication(tornado.web.Application):
 def make_app():
     return VisApplication([
         (r"/graphs/treatment_frequency", TreatmentFrequencyGraphHandler),
+        (r"/graphs/(.+)", TreatmentDetailsGraphHandler),
+        (r"/treatment/(.+)", TreatmentDetailsHandler),
         (r"/treatment_summary", TreatmentSummaryHandler)
     ])
 

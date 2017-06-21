@@ -22,10 +22,11 @@ agree_weight = 0.5
 
 class DataManager(object):
     def __init__(self):
+        logging.info("Started calculating data (this will take a bit)")
         self.df = self.prepare_initial_dataframe()
         self.data_month_crosstab = self.data_month_crosstab()
         self.treatment_mapping = self.prepare_treatment_definitons()
-        self.treatment_summaries = self.prepare_treatment_summaries()
+        self.treatment_summaries, self.treatment_graphs = self.prepare_treatment_summaries()
         logging.info("All data calculated")
 
     @staticmethod
@@ -44,7 +45,7 @@ class DataManager(object):
 
         # calculate some initial values
         df['month'] = df['timestamp'].values.astype('<M8[M]')
-        df['sentiment'] = sent_mapping[df['sentiment']]
+        df['sentiment'] = df['sentiment'].apply(lambda s: sent_mapping[s])
         df['weight'] = df.apply(
             lambda s: factuality_weight[s['factuality']] * (1 + (s['agrees'] * agree_weight)),
             axis=1
@@ -63,6 +64,7 @@ class DataManager(object):
 
     def prepare_treatment_summaries(self):
         treatment_summaries = {}
+        treatment_graph_data = {}
 
         # precalculate some values common to all treatments
         one_year_ago = np.datetime64(datetime.now(), 'D') - np.timedelta64(365, 'D')
@@ -86,8 +88,10 @@ class DataManager(object):
             data["last_year_%"] = data["last_year_cnt"] / last_year_total
             data["previous_year_%"] = data["previous_year_cnt"] / previous_year_total
 
+            treatment_summaries[label] = data
+
             # sentiment statistics
-            # summarise the treatment sentiment on a post level
+            # # summarise the treatment sentiment on a post level
             def post_group(group):
                 group["sentiment"] = group["weighted_sentiment"].sum() / group["weight"].sum()
                 group["weight"] = group["weight"].max()
@@ -98,16 +102,19 @@ class DataManager(object):
             ].apply(post_group).drop_duplicates()
             post_scores["weighted_sentiment"] = post_scores["weight"] * post_scores["sentiment"]
 
-            # summarise these posts per month
-            data["sentiment_per_month_df"] = post_scores.groupby('month').apply(
-                lambda r: r["weighted_sentiment"].sum() / r["weight"].sum())
+            # # summarise these posts per month
+            month_scores = post_scores.groupby('month').apply(
+                lambda r: r["weighted_sentiment"].sum() / r["weight"].sum()
+            ).to_frame().reset_index()
+            month_scores.columns = ["month", "score"]
+            treatment_graph_data[label] = month_scores
 
-            treatment_summaries[label] = data
+            break
         for rank, treatment in enumerate(sorted(
             treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
         )):
             treatment_summaries[treatment[0]]["cnt_rank"] = rank
-        return treatment_summaries
+        return treatment_summaries, treatment_graph_data
 
     def data_month_crosstab(self):
         tr_mon = pandas.crosstab(self.df["treatments"], self.df["month"])

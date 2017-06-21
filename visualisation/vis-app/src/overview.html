@@ -5,7 +5,7 @@
 <div class="treatment-results">
   <ul class="treatments">
     <li repeat.for="treatment of treatments" class="treatment-item">
-      <a class="treatment-link" href="">
+      <a class="treatment-link" route-href="route: treatment; params.bind: {name:treatment.treatment}">
         <div class="pure-g">
           <div class="treatment-column pure-u-1-3">
             <p class="treatment-name">${treatment.treatment}</p>

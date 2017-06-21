@@ -1,0 +1,13 @@
+<template>
+  <require from="./graph"></require>
+  <div class="pure-g details-header">
+      <div class="details-name pure-u-7-8">
+        ${treatment.treatment}
+      </div>
+      <div class="details-exit pure-u-1-8">
+        <a class="details-exit-link" route-href="route: overview">X</a>
+      </div>
+  </div>
+  <graph treatment="${treatment.treatment}" class=pure-u-1></graph>
+  </div>
+</template>
