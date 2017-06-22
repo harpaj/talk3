@@ -1,12 +1,20 @@
 import {HttpClient} from 'aurelia-fetch-client';
-import {bindable} from 'aurelia-framework';
 
 export class Graph {
 
-  @bindable treatment:string;
-
   constructor() {
     this.client = new HttpClient();
+    this.graph = "<div>Loading graph...</div>";
+  }
+
+  determineActivationStrategy(){
+    return "replace";
+  }
+
+  activate(params, settings) {
+    console.log(params, settings);
+    this.treatment = params.name;
+    this.graph_type = params.graph;
   }
 
   attached() {
@@ -17,8 +25,8 @@ export class Graph {
       return data.script;
     })
     .then(script_data => {
-      // In theory, I don't see why this timeout is needed, but stuff doesn't
-      // work without it.
+      // In theory, I don't see why this timeout is needed, but the binding
+      // of this.graph to the innerHTML appears to not update immediately
       setTimeout(function(){
         let script = document.createElement("script");
         script.innerHTML = script_data;
@@ -26,4 +34,9 @@ export class Graph {
       }, 10)
     })
   }
+
+  detached() {
+    document.head.removeChild(document.head.lastChild);
+  }
+
 }

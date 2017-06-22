@@ -1,13 +1,48 @@
 <template>
   <require from="./graph"></require>
-  <div class="pure-g details-header">
-      <div class="details-name pure-u-7-8">
-        ${treatment.treatment}
+  <div class="details-card">
+    <div class="pure-g">
+        <div class="details-name pure-u-7-8">
+          <p class="treatment-name">${treatment.treatment}</p>
+          <p class="treatment-names">${treatment.names.join(', ')}</p>
+        </div>
+        <div class="details-exit pure-u-1-8">
+          <a class="details-exit-link" route-href="route: overview">🗙</a>
+        </div>
+    </div>
+    <div class="hr"></div>
+    <div class="pure-g">
+      <div class="details-box graph pure-u-3-4">
+        <router-view></router-view>
+        <!-- <graph treatment="${treatment.treatment}"></graph> -->
       </div>
-      <div class="details-exit pure-u-1-8">
-        <a class="details-exit-link" route-href="route: overview">X</a>
+      <div class="details-boxes pure-u-1-4">
+        <a class="details-box info ${active_graph === 'popularity' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('popularity')">
+          <p class="box-header">Activity</p>
+          <p class="box-content">${(treatment.last_year_pcnt * 100).toFixed(1)}%</p>
+          <p class="box-footer">of mentions last year<br>increasing popularity</p>
+        </a>
+        <a class="details-box info ${active_graph === 'delta' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('delta')">
+          <p class="box-header">Delta</p>
+          <p class="box-content"></p>
+          <p class="box-footer"></p>
+        </a>
+        <a class="details-box info">
+          <p class="box-header">Score</p>
+          <p class="box-content"></p>
+          <p class="box-footer"></p>
+        </a>
       </div>
-  </div>
-  <graph treatment="${treatment.treatment}" class=pure-u-1></graph>
+    </div>
+    <div class="hr"></div>
+    <div class="pure-g">
+        <div class="details-name pure-u-7-8">
+          <p class="treatment-name">${treatment.treatment}</p>
+          <p class="treatment-names">${treatment.names}</p>
+        </div>
+        <div class="details-exit pure-u-1-8">
+          <a class="details-exit-link" route-href="route: overview">🗙</a>
+        </div>
+    </div>
   </div>
 </template>

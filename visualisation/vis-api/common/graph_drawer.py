@@ -39,6 +39,8 @@ class GraphDrawer(object):
                 tools='xwheel_zoom,xpan,reset,save',
                 active_scroll='xwheel_zoom',
                 active_drag='xpan',
+                plot_width=800,
+                plot_height=500
                 # sizing_mode='stretch_both',
             )
             p.line("month", "score", line_width=2, source=data)

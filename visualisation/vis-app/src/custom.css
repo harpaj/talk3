@@ -72,7 +72,7 @@ a.treatment-link:hover {
   border-left: 1px solid #3d3f41;
 }
 
-.treatment-item p {
+p {
   margin: 0;
 }
 
@@ -94,4 +94,90 @@ p.treatment-rating {
 p.explanation {
   font-size: 8pt;
   color: #3d3f41;
+}
+
+
+.details-card {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  color: 131517;
+}
+
+.details-exit {
+  font-size: 30px;
+  text-align: right;
+}
+
+.details-exit a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.details-exit a:hover {
+  color: #3d3f41;
+}
+
+.details-box {
+  box-sizing: border-box;
+  box-shadow: inset 0px 0px 5px 0px #DDD;
+  background-color: #FFF;
+  padding: 10px;
+  position: relative;
+}
+
+.details-box.graph {
+  height: 520px;
+}
+
+.details-box.info {
+  height: 160px;
+  width: 160px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  outline: 0;
+}
+
+a.details-box:hover {
+  background-color: #eee;
+}
+
+a.details-box.active {
+  background-color: #eee;
+}
+
+.details-box .box-header{
+  font-size: 8pt;
+  color: #3d3f41;
+}
+
+.details-box .box-content{
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: 30pt;
+  font-weight: bold;
+}
+
+.details-box .box-footer{
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  font-size: 8pt;
+  color: #3d3f41;
+}
+
+.hr {
+  width: 100%;
+  height: 1px;
+  background-color: #131517;
+  margin: 10px 0;
 }

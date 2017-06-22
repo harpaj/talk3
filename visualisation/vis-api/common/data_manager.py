@@ -85,8 +85,8 @@ class DataManager(object):
                 (group["timestamp"] > two_years_ago) & (group["timestamp"] < one_year_ago)
             ])
             data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
-            data["last_year_%"] = data["last_year_cnt"] / last_year_total
-            data["previous_year_%"] = data["previous_year_cnt"] / previous_year_total
+            data["last_year_pcnt"] = data["last_year_cnt"] / last_year_total
+            data["previous_year_pcnt"] = data["previous_year_cnt"] / previous_year_total
 
             treatment_summaries[label] = data
 
@@ -109,7 +109,7 @@ class DataManager(object):
             month_scores.columns = ["month", "score"]
             treatment_graph_data[label] = month_scores
 
-            break
+            # break
         for rank, treatment in enumerate(sorted(
             treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
         )):
