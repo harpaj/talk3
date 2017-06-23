@@ -78,7 +78,7 @@ print(data_review['positive_word_count'] )
 
 data_review['negative_word_count'] = data_review['tokens'].apply(lambda tokens: len(negative_words.intersection(tokens)))
 
-data_review= data_review[['negative_word_count','positive_word_count','tokens']]
+data_review= data_review[['negative_word_count','positive_word_count','tokens','factual (yes/no)','sentiment (pos/neg/neu)']]
 print(data_review.head(20) )
 #print(data_review.head())
 
