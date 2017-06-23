@@ -102,14 +102,30 @@ class DataManager(object):
             ].apply(post_group).drop_duplicates()
             post_scores["weighted_sentiment"] = post_scores["weight"] * post_scores["sentiment"]
 
-            # # summarise these posts per month
-            month_scores = post_scores.groupby('month').apply(
-                lambda r: r["weighted_sentiment"].sum() / r["weight"].sum()
-            ).to_frame().reset_index()
-            month_scores.columns = ["month", "score"]
-            treatment_graph_data[label] = month_scores
+            # # summarise the posts per month
+            def month_group(group):
+                group["score"] = group["weighted_sentiment"].sum() / group["weight"].sum()
+                group["pos_cnt"] = len(group[group["weighted_sentiment"] > 0])
+                group["neu_cnt"] = len(group[group["weighted_sentiment"] == 0])
+                group["neg_cnt"] = len(group[group["weighted_sentiment"] < 0])
 
-            # break
+                # these are needed for the stacked graphs
+                group['pos+neu_cnt'] = group['pos_cnt'] + group['neu_cnt']
+                group['all_cnt'] = group['pos+neu_cnt'] + group['neg_cnt']
+                del group["weighted_sentiment"]
+                del group["weight"]
+                return group
+
+            month_groups = post_scores.groupby('month')[
+                'month', 'weight', 'weighted_sentiment'
+            ].apply(month_group).drop_duplicates().sort_values('month').set_index('month').reindex(
+                pandas.DatetimeIndex(np.arange('2011-01', '2017-12', dtype='datetime64[M]')),
+                fill_value=0
+            )
+            # bokeh can't read from the index, so we have to add it as a column
+            month_groups['month'] = month_groups.index
+            treatment_graph_data[label] = month_groups
+
         for rank, treatment in enumerate(sorted(
             treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
         )):

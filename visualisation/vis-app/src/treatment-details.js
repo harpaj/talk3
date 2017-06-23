@@ -4,7 +4,7 @@ export class Overview {
 
   configureRouter(config, router){
     config.map([
-      {route: '', redirect: 'popularity'},
+      {route: '', redirect: 'count'},
       {route: ':graph', moduleId: 'graph', name: 'graph_page'},
     ]);
     this.router = router;
@@ -14,7 +14,7 @@ export class Overview {
     this.client = new HttpClient();
     this.treatment;
     this.name;
-    this.active_graph = "popularity";
+    this.active_graph = "count";
   }
 
   activate(params) {

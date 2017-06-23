@@ -18,7 +18,8 @@ export class Graph {
   }
 
   attached() {
-    return this.client.fetch('http://localhost:8765/graphs/' + this.treatment)
+    return this.client.fetch(
+        'http://localhost:8765/graphs/' + this.treatment + '/' + this.graph_type)
     .then(response => response.json())
     .then(data => {
       this.graph = data.div;

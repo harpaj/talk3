@@ -17,12 +17,12 @@
         <!-- <graph treatment="${treatment.treatment}"></graph> -->
       </div>
       <div class="details-boxes pure-u-1-4">
-        <a class="details-box info ${active_graph === 'popularity' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('popularity')">
+        <a class="details-box info ${active_graph === 'count' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('count')">
           <p class="box-header">Activity</p>
           <p class="box-content">${(treatment.last_year_pcnt * 100).toFixed(1)}%</p>
           <p class="box-footer">of mentions last year<br>increasing popularity</p>
         </a>
-        <a class="details-box info ${active_graph === 'delta' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('delta')">
+        <a class="details-box info ${active_graph === 'score' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('score')">
           <p class="box-header">Delta</p>
           <p class="box-content"></p>
           <p class="box-footer"></p>
