@@ -1,11 +1,15 @@
 import numpy as np
 import pandas as pd
 import nltk
+import string
+import re
 import datetime
 import matplotlib.pyplot as plt
 import math
 import random as random
 
+from nltk.corpus import stopwords
+stop = stopwords.words('english')
 
 lexicon_directory = '../data/opinion-lexicon-English'
 data_dir = '../data'
@@ -39,17 +43,27 @@ pd.set_option('display.width', 1000)
 
 #merge coloumns before , sentence,after and third
 df=pd.DataFrame(data_review)
-df["text"] = df["before"].map(str) +df["after"].map(str)+ df["third"].map(str)+ df["sentence"]
+df["text"] = df["before"].map(str) +"'\n'" +df["sentence"].map(str)+ "'\n'" + df["after"].map(str)+ "'\n'" +df["third"].map(str)
+
+def remove_punctuation(s):
+    s = ''.join([i for i in s if i not in frozenset(string.punctuation)])
+    return s
+
+df['cleaned'] = df['text'].apply(remove_punctuation)
 
 print("hello")
 
 print(df.head(2))
 pd.options.display.max_colwidth = 100
 
-nltk.word_tokenize(df.get_value(0,'text'))
-data_review['tokens'] =df['text'].apply(nltk.word_tokenize)
+#nltk.word_tokenize(df.get_value(0,'text'))
+data_review['tokens'] =df['cleaned'].apply(nltk.word_tokenize)
+data_review['tokens'].apply(lambda x: [item for item in x if item not in stop])
 print("sdsdd")
-print(data_review['tokens'].head(2))
+
+
+print(data_review['tokens'].head(3))
+
 #print(data_review['tokens'].head())
 
 #Count the number of tokens\
@@ -64,6 +78,8 @@ print(data_review['positive_word_count'] )
 
 data_review['negative_word_count'] = data_review['tokens'].apply(lambda tokens: len(negative_words.intersection(tokens)))
 
+data_review= data_review[['negative_word_count','positive_word_count','tokens']]
+print(data_review.head(20) )
 #print(data_review.head())
 
 #df_a = pd.DataFrame(data_review, columns = ['post_id',])
