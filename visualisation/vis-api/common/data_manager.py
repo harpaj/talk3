@@ -69,6 +69,9 @@ class DataManager(object):
         except ZeroDivisionError:
             return 0
 
+
+
+
     def prepare_treatment_summaries(self):
         treatment_summaries = {}
         treatment_graph_data = {}
@@ -80,6 +83,7 @@ class DataManager(object):
         last_year_total = len(self.df[self.df["timestamp"] > one_year_ago])
         previous_year_total = len(self.df[
             (self.df["timestamp"] > two_years_ago) & (self.df["timestamp"] < one_year_ago)])
+        month_totals = self.df.groupby("month").size()
 
         # create groups of mentions per treatment, iterate
         for label, group in self.df.groupby("treatments"):
@@ -94,9 +98,9 @@ class DataManager(object):
                 (group["timestamp"] > two_years_ago) & (group["timestamp"] < one_year_ago)
             ])
 
-            data["total_pcnt"] = data["total_cnt"] / overall_total
-            data["last_year_pcnt"] = data["last_year_cnt"] / last_year_total
-            data["previous_year_pcnt"] = data["previous_year_cnt"] / previous_year_total
+            data["total_pcnt"] = data["total_cnt"] * 100 / overall_total
+            data["last_year_pcnt"] = data["last_year_cnt"] * 100 / last_year_total
+            data["previous_year_pcnt"] = data["previous_year_cnt"] * 100 / previous_year_total
 
             data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
 
@@ -127,6 +131,8 @@ class DataManager(object):
 
             # # summarise the posts per month
             def month_group(group):
+                month = group['month'].iloc[0]
+
                 group["score"] = self.calculate_score(group)
                 group["pos_cnt"] = len(group[group["weighted_sentiment"] > 0])
                 group["neu_cnt"] = len(group[group["weighted_sentiment"] == 0])
@@ -135,6 +141,13 @@ class DataManager(object):
                 # these are needed for the stacked graphs
                 group['pos+neu_cnt'] = group['pos_cnt'] + group['neu_cnt']
                 group['all_cnt'] = group['pos+neu_cnt'] + group['neg_cnt']
+
+                # relative counts
+                group["pos_rel"] = group["pos_cnt"] * 100 / month_totals[month]
+                group["neu_rel"] = group["neu_cnt"] * 100 / month_totals[month]
+                group["neg_rel"] = group["neg_cnt"] * 100 / month_totals[month]
+                group["pos+neu_rel"] = group["pos+neu_cnt"] * 100 / month_totals[month]
+                group["all_rel"] = group["all_cnt"] * 100 / month_totals[month]
                 del group["weighted_sentiment"]
                 del group["weight"]
                 return group

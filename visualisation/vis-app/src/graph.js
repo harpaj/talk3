@@ -12,7 +12,6 @@ export class Graph {
   }
 
   activate(params, settings) {
-    console.log(params, settings);
     this.treatment = params.name;
     this.graph_type = params.graph;
   }

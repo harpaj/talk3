@@ -31,10 +31,10 @@
             </strong> last year
           </p>
         </a>
-        <a class="details-box info">
+        <a class="details-box info ${active_graph === 'relative' ? 'active' : ''}" href="javascript:void(0)" click.delegate="graph('relative')">
           <p class="box-header">Activity (relative)</p>
           <p class="box-content">
-            ${decimals(treatment.total_pcnt * 100)}%
+            ${decimals(treatment.total_pcnt)}%
             <span class="${trend(treatment.previous_year_pcnt, treatment.last_year_pcnt, 'sentiment')}">
               ${trend(treatment.previous_year_pcnt, treatment.last_year_pcnt, 'arrow')}
             </span>

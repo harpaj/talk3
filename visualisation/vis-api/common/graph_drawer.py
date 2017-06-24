@@ -16,7 +16,8 @@ class GraphDrawer(object):
         self.dm = data_manager
         self.summary_graph = self.get_graph_embed_data()
         self.treatment_score_graphs = self.get_treatment_score_graphs()
-        self.treatment_count_graphs = self.get_treatment_count_graphs()
+        self.treatment_count_graphs = self.get_treatment_count_graphs(relative=False)
+        self.treatment_relative_graphs = self.get_treatment_count_graphs(relative=True)
         logging.info("All graph data prepared")
 
     def get_graph_embed_data(self):
@@ -64,15 +65,18 @@ class GraphDrawer(object):
             last = next
         return areas
 
-    def get_treatment_count_graphs(self):
+    def get_treatment_count_graphs(self, relative):
         graphs = {}
-        categories = ["pos_cnt", "neu_cnt", "neg_cnt"]
+        elements = ["pos_cnt", "neu_cnt", "neg_cnt", "pos+neu_cnt", "all_cnt"]
+        if relative:
+            elements = ["pos_rel", "neu_rel", "neg_rel", "pos+neu_rel", "all_rel"]
+        categories = elements[:3]
         for treatment, data in self.dm.treatment_graphs.items():
             areas = self.stacked(data, categories)
             months = list(data["month"])
             x2 = np.hstack((months[::-1], months))
             p = figure(
-                y_axis_label='posts',
+                y_axis_label='% of posts' if relative else 'posts',
                 x_axis_type='datetime',
                 x_range=x_range,
                 tools='xwheel_zoom,xpan,reset,save',
@@ -96,9 +100,9 @@ class GraphDrawer(object):
                 [x2] * len(areas), [areas[cat] for cat in categories],
                 color=["#5fad56", "#f2c14e", "#df2935"], alpha=0.8, line_color=None)
             data_source = ColumnDataSource.from_df(data)
-            p.line("month", "pos_cnt", color="#5fad56", legend="positive", name="pos", source=data_source)
-            p.line("month", "pos+neu_cnt", color="#f2c14e", legend="neutral", name="neu", source=data_source)
-            p.line("month", "all_cnt", color="#df2935", legend="negative", name="neg", source=data_source)
+            p.line("month", elements[0], color="#5fad56", legend="positive", name="pos", source=data_source)
+            p.line("month", elements[3], color="#f2c14e", legend="neutral", name="neu", source=data_source)
+            p.line("month", elements[4], color="#df2935", legend="negative", name="neg", source=data_source)
 
             graphs[treatment] = components(p)
         return graphs
