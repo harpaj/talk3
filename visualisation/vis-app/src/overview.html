@@ -12,8 +12,8 @@
             <p class="treatment-names">${treatment.names.join(', ')}</p>
           </div>
           <div class="treatment-column rank pure-u-1-3">
-            <p class="treatment-rating">79%</p>
-            <p class="explanation">positive mentions in the last 12 months</p>
+            <p class="treatment-rating ${(treatment.total_score > 0.05) ? 'pos' : (treatment.total_score < -0.05) ? 'neg' : 'neu'}">${treatment.total_score.toFixed(2)}</p>
+            <p class="explanation">treatment score</p>
           </div>
           <div class="treatment-column rank pure-u-1-3">
             <p class="treatment-rating">${treatment.last_year_cnt}</p>

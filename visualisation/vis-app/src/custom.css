@@ -91,6 +91,18 @@ p.treatment-rating {
   font-weight: bold;
 }
 
+.pos {
+  color: #5fad56;
+}
+
+.neu {
+  color: #f2c14e;
+}
+
+.neg {
+  color: #df2935;
+}
+
 p.explanation {
   font-size: 8pt;
   color: #3d3f41;

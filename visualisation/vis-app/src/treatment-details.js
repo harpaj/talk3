@@ -30,4 +30,20 @@ export class Overview {
     this.active_graph = name;
     this.router.navigateToRoute("graph_page", {graph: name});
   }
+
+  decimals(value) {
+    if(value < 10) return value.toFixed(1);
+    return value.toFixed(0);
+  }
+
+  trend(from, to, type) {
+    var elements = {
+      sentiment: ["pos", "neu", "neg"],
+      arrow: ["▲", "▶", "▼"],
+      description: ["increased", "constant", "decreased"],
+    }[type]
+    if(to > (from * 1.02)) return elements[0];
+    if(to < (from * 0.98)) return elements[2];
+    return elements[1];
+  }
 }

@@ -2,7 +2,7 @@ import logging
 
 from bokeh.charts import Area
 from bokeh.palettes import Inferno11
-from bokeh.models import Range1d, HoverTool
+from bokeh.models import Range1d, HoverTool, BoxAnnotation
 from bokeh.models.sources import ColumnDataSource
 from bokeh.embed import components
 from bokeh.plotting import figure
@@ -46,7 +46,11 @@ class GraphDrawer(object):
                 plot_height=500
                 # sizing_mode='stretch_both',
             )
-            p.line("month", "score", line_width=2, source=data)
+            p.line("month", "score", line_width=2, source=data, color="black")
+            pos_box = BoxAnnotation(bottom=0, top=1, fill_alpha=0.1, fill_color='#5fad56')
+            neg_box = BoxAnnotation(bottom=-1, top=0, fill_alpha=0.1, fill_color='#df2935')
+            p.add_layout(pos_box)
+            p.add_layout(neg_box)
             graphs[treatment] = components(p)
         return graphs
 
@@ -68,7 +72,7 @@ class GraphDrawer(object):
             months = list(data["month"])
             x2 = np.hstack((months[::-1], months))
             p = figure(
-                y_axis_label='score',
+                y_axis_label='posts',
                 x_axis_type='datetime',
                 x_range=x_range,
                 tools='xwheel_zoom,xpan,reset,save',

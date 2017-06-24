@@ -62,6 +62,13 @@ class DataManager(object):
                 treatment_mapping[line[0]] = line[1:]
         return treatment_mapping
 
+    @staticmethod
+    def calculate_score(df):
+        try:
+            return df["weighted_sentiment"].sum() / df["weight"].sum()
+        except ZeroDivisionError:
+            return 0
+
     def prepare_treatment_summaries(self):
         treatment_summaries = {}
         treatment_graph_data = {}
@@ -69,6 +76,7 @@ class DataManager(object):
         # precalculate some values common to all treatments
         one_year_ago = np.datetime64(datetime.now(), 'D') - np.timedelta64(365, 'D')
         two_years_ago = one_year_ago - np.timedelta64(365, 'D')
+        overall_total = len(self.df.index)
         last_year_total = len(self.df[self.df["timestamp"] > one_year_ago])
         previous_year_total = len(self.df[
             (self.df["timestamp"] > two_years_ago) & (self.df["timestamp"] < one_year_ago)])
@@ -78,33 +86,48 @@ class DataManager(object):
             data = {"names": self.treatment_mapping[label]}
 
             # frequency statistics
+            data["total_cnt"] = len(group.index)
             data["last_year_cnt"] = len(group[
                 group["timestamp"] > one_year_ago
             ])
             data["previous_year_cnt"] = len(group[
                 (group["timestamp"] > two_years_ago) & (group["timestamp"] < one_year_ago)
             ])
-            data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
+
+            data["total_pcnt"] = data["total_cnt"] / overall_total
             data["last_year_pcnt"] = data["last_year_cnt"] / last_year_total
             data["previous_year_pcnt"] = data["previous_year_cnt"] / previous_year_total
 
-            treatment_summaries[label] = data
+            data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
 
             # sentiment statistics
             # # summarise the treatment sentiment on a post level
             def post_group(group):
-                group["sentiment"] = group["weighted_sentiment"].sum() / group["weight"].sum()
+                group["sentiment"] = self.calculate_score(group)
                 group["weight"] = group["weight"].max()
                 return group
 
             post_scores = group.groupby('post_id')[
-                ['post_id', 'month', 'weight', 'weighted_sentiment']
+                ['post_id', 'month', 'weight', 'weighted_sentiment', 'timestamp']
             ].apply(post_group).drop_duplicates()
             post_scores["weighted_sentiment"] = post_scores["weight"] * post_scores["sentiment"]
 
+            # # create the overall score and last two yearly scores for the treatment,
+            # # based on the scores from the posts
+
+            data["total_score"] = self.calculate_score(post_scores)
+            data["last_year_score"] = self.calculate_score(
+                post_scores[post_scores["timestamp"] > one_year_ago])
+            data["previous_year_score"] = self.calculate_score(post_scores[
+                (post_scores["timestamp"] > two_years_ago) &
+                (post_scores["timestamp"] < one_year_ago)
+            ])
+
+            treatment_summaries[label] = data
+
             # # summarise the posts per month
             def month_group(group):
-                group["score"] = group["weighted_sentiment"].sum() / group["weight"].sum()
+                group["score"] = self.calculate_score(group)
                 group["pos_cnt"] = len(group[group["weighted_sentiment"] > 0])
                 group["neu_cnt"] = len(group[group["weighted_sentiment"] == 0])
                 group["neg_cnt"] = len(group[group["weighted_sentiment"] < 0])
@@ -125,6 +148,8 @@ class DataManager(object):
             # bokeh can't read from the index, so we have to add it as a column
             month_groups['month'] = month_groups.index
             treatment_graph_data[label] = month_groups
+
+            # break
 
         for rank, treatment in enumerate(sorted(
             treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
