@@ -66,6 +66,7 @@ admirable
 admirably
 admiration
 admire
+help
 admirer
 admiring
 admiringly
