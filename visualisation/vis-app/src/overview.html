@@ -1,6 +1,15 @@
 <template>
 <div class="search-area">
-  <input type="search" id="search" placeholder="Search..." value.bind="filter" input.delegate="filterTreatments()"/>
+  <input class="elem" type="search" id="search" placeholder="Search..." value.bind="filter" input.delegate="filterTreatments()"/>
+  <div class="dropdown">
+    <div class="elem key">${sort_label}</div>
+    <div class="dropdown-content" id="sort-dropdown">
+      <a href="javascript:void(0)" click.delegate="changeKey('treatment')">Name</a>
+      <a href="javascript:void(0)" click.delegate="changeKey('last_year_cnt')">Frequency</a>
+      <a href="javascript:void(0)" click.delegate="changeKey('total_score')">Score</a>
+    </div>
+  </div>
+  <a class="elem order" href="javascript:void(0)" click.delegate="changeOrder()">${order > 0 ? '▲' : '▼'}</a>
 </div>
 <div class="treatment-results">
   <ul class="treatments">
