@@ -27,6 +27,12 @@ positive_words = [x.decode('us-ascii') for x in positive_words]
 positive_words = set(positive_words)
 print(positive_words)
 
+ #stop words\n
+stop_words = np.loadtxt(data_dir + '/stopwords.txt', comments=';', dtype='bytes')
+stop_words = [x.decode('us-ascii') for x in stop_words]
+stop_words = set(stop_words)
+print(stop_words)
+
 # Negative Lexicons
 with open(lexicon_directory + '/negative-words.txt', encoding='iso-8859-1') as f:
     negative_words = np.loadtxt(f, comments=';', dtype='bytes')
@@ -50,6 +56,7 @@ def remove_punctuation(s):
     return s
 
 df['cleaned'] = df['text'].apply(remove_punctuation)
+df['cleaned'] = [token.lower() for token in df['cleaned']]
 
 print("hello")
 
@@ -83,3 +90,18 @@ print(data_review.head(20) )
 #print(data_review.head())
 
 #df_a = pd.DataFrame(data_review, columns = ['post_id',])
+for index, row in data_review.iterrows():
+    #print(row['tokens'])
+    cleaned_text = filter(lambda x: x not in stop_words, row['tokens'])
+    wordlist = nltk.FreqDist(cleaned_text)
+    word_features = wordlist.items()
+    print(word_features)
+
+
+
+"""def get_words_in_tweets(tweets):
+    all_words = []
+    for (words, sentiment) in tweets:
+      all_words.extend(words)
+    return all_words"""
+
