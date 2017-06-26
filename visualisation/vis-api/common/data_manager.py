@@ -1,6 +1,7 @@
 import csv
 import logging
 from datetime import datetime
+import json
 
 import pandas
 import numpy as np
@@ -26,7 +27,8 @@ class DataManager(object):
         self.df = self.prepare_initial_dataframe()
         self.data_month_crosstab = self.data_month_crosstab()
         self.treatment_mapping = self.prepare_treatment_definitons()
-        self.treatment_summaries, self.treatment_graphs = self.prepare_treatment_summaries()
+        self.treatment_summaries, self.treatment_graphs, self.treatment_detailed_data = \
+            self.prepare_treatment_summaries()
         logging.info("All data calculated")
 
     @staticmethod
@@ -35,7 +37,7 @@ class DataManager(object):
             open("/home/johannes/talk3/data/treatment_detected_linewise.csv", 'r'),
             usecols=[
                 'subforum', 'post_id', 'timestamp', 'sentence', 'treatments', 'thread_id',
-                'sentiment', 'factuality', 'agrees'
+                'url', 'author_id', 'sentiment', 'factuality', 'agrees'
             ],
             index_col=None,
             parse_dates=['timestamp'],
@@ -69,12 +71,10 @@ class DataManager(object):
         except ZeroDivisionError:
             return 0
 
-
-
-
     def prepare_treatment_summaries(self):
         treatment_summaries = {}
         treatment_graph_data = {}
+        treatment_detailed_data = {}
 
         # precalculate some values common to all treatments
         one_year_ago = np.datetime64(datetime.now(), 'D') - np.timedelta64(365, 'D')
@@ -87,7 +87,10 @@ class DataManager(object):
 
         # create groups of mentions per treatment, iterate
         for label, group in self.df.groupby("treatments"):
-            data = {"names": self.treatment_mapping[label]}
+            data = {
+                "names": self.treatment_mapping[label],
+                "treatment": label
+            }
 
             # frequency statistics
             data["total_cnt"] = len(group.index)
@@ -101,8 +104,6 @@ class DataManager(object):
             data["total_pcnt"] = data["total_cnt"] * 100 / overall_total
             data["last_year_pcnt"] = data["last_year_cnt"] * 100 / last_year_total
             data["previous_year_pcnt"] = data["previous_year_cnt"] * 100 / previous_year_total
-
-            data["most_popular_thread"] = group['thread_id'].value_counts().idxmax()
 
             # sentiment statistics
             # # summarise the treatment sentiment on a post level
@@ -162,13 +163,32 @@ class DataManager(object):
             month_groups['month'] = month_groups.index
             treatment_graph_data[label] = month_groups
 
-            # break
+            thread_groups = sorted(
+                list(group.drop_duplicates("post_id").groupby("thread_id", sort=False)),
+                key=lambda tg: len(tg[1]),
+                reverse=True
+            )[:5]
 
-        for rank, treatment in enumerate(sorted(
-            treatment_summaries.items(), key=lambda kv: kv[1]['last_year_cnt'], reverse=True
-        )):
-            treatment_summaries[treatment[0]]["cnt_rank"] = rank
-        return treatment_summaries, treatment_graph_data
+            detailed_data = data.copy()
+
+            threads = []
+            for thread, thread_group in thread_groups:
+                sentences = thread_group.sort_values(
+                    ["factuality", "agrees", "timestamp"], ascending=False
+                ).head(5).sort_values("timestamp", ascending=False)[[
+                    "url", "sentence", "sentiment", "factuality", "author_id", "timestamp"
+                ]].to_json(orient='records')
+                threads.append({
+                    "thread_id": thread,
+                    "size": len(thread_group.index),
+                    "sentences": json.loads(sentences)
+                })
+            detailed_data["threads"] = threads
+            treatment_detailed_data[label] = detailed_data
+
+            break
+
+        return treatment_summaries, treatment_graph_data, treatment_detailed_data
 
     def data_month_crosstab(self):
         tr_mon = pandas.crosstab(self.df["treatments"], self.df["month"])

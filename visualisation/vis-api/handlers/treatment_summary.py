@@ -4,8 +4,5 @@ from .base import BaseHandler
 class TreatmentSummaryHandler(BaseHandler):
 
     def get(self):
-        treatment_list = []
-        for name, summary in self.application.dm.treatment_summaries.items():
-            summary["treatment"] = name
-            treatment_list.append(summary)
+        treatment_list = list(self.application.dm.treatment_summaries.values())
         self.finish({"treatment_list": treatment_list})
