@@ -2,14 +2,24 @@ import numpy as np
 import pandas as pd
 import nltk
 import string
+
+import scipy
+import sklearn
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+
 import re
 import datetime
 import matplotlib.pyplot as plt
 import math
 import random as random
 
-from nltk.corpus import stopwords
-stop = stopwords.words('english')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk import tokenize
+sid = SentimentIntensityAnalyzer()
+
+
 
 lexicon_directory = '../data/opinion-lexicon-English'
 data_dir = '../data'
@@ -65,7 +75,7 @@ pd.options.display.max_colwidth = 100
 
 #nltk.word_tokenize(df.get_value(0,'text'))
 data_review['tokens'] =df['cleaned'].apply(nltk.word_tokenize)
-data_review['tokens'].apply(lambda x: [item for item in x if item not in stop])
+data_review['tokens'].apply(lambda x: [item for item in x if item not in stop_words])
 print("sdsdd")
 
 
@@ -86,7 +96,7 @@ print(data_review['positive_word_count'] )
 data_review['negative_word_count'] = data_review['tokens'].apply(lambda tokens: len(negative_words.intersection(tokens)))
 
 data_review= data_review[['negative_word_count','positive_word_count','tokens','factual (yes/no)','sentiment (pos/neg/neu)']]
-print(data_review.head(20) )
+
 #print(data_review.head())
 
 #df_a = pd.DataFrame(data_review, columns = ['post_id',])
@@ -99,9 +109,35 @@ for index, row in data_review.iterrows():
 
 
 
-"""def get_words_in_tweets(tweets):
-    all_words = []
-    for (words, sentiment) in tweets:
-      all_words.extend(words)
-    return all_words"""
+print(data_review.head(20) )
+
+
+
+
+def print_sentiment_scores(sentence):
+        sent=""
+        snt = sid.polarity_scores(sentence)
+        #print((str(snt['compound'])))
+        if(snt["compound"] >= 0.2):
+                sent= "pos"
+        elif(snt["compound"] <= -0.2):
+                sent="neg"
+        else:
+            sent="neutral"
+        return (sent)
+
+
+
+data_review["vander_score"]=df["text"].apply(print_sentiment_scores)
+print(data_review.head(20))
+"""for  x in df["text"]:
+    y=print_sentiment_scores(x)
+    print(y)
+    #data_review['ddd']=data_review.map(y)"""
+
+
+
+
+
+
 
