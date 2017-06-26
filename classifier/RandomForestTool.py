@@ -11,6 +11,7 @@ import string
 import numpy as np
 import  csv
 from nltk.corpus import stopwords
+from textblob import TextBlob
 
 def defsentfeatextractor(dataframe):
     lexicon_directory = 'C:/Users/Atin/Documents/GitHub/New folder/talk3/data/opinion-lexicon-English'
@@ -91,36 +92,56 @@ def defsentfeatextractor(dataframe):
 
 print(csv.field_size_limit())
 # Create a dataframe with the four feature variables
-df = pd.read_csv('D:/Projects/TALK-3/Annotation/Atin/dataset_trial.csv')
-df = pd.DataFrame(df)
+df_set = pd.read_csv('D:/Projects/TALK-3/Annotation/Atin/dataset_trial.csv')
+print("File dataet",df_set.head())
+df_set = pd.DataFrame(df_set)
+original_col = df_set.columns;
+print(original_col)
 
-
+print("File dataet after",df_set.head())
 
 #1.Pos-Neg Word Count Feature
 
-df_feat1 = defsentfeatextractor(df)
+df_feat1 = defsentfeatextractor(df_set)
+df_set = df_set.filter(['post_id','sentence','after','third','treatments','sentiment','factual'], axis=1)
+#print("new",df_set.head())
 
-print()
+print("SentFeat:",df_feat1.head())
+#print("Dataset",df_set.head())
+
+#print(df_set.columns)
+
+#2. TF-IDF
+
+
+#3. Polarity Score
+df_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_set["sentence"].map(str)+ "'\n'" + df_set["after"].map(str)+ "'\n'" +df_set["third"].map(str)))
+
+#4. Subjectivity Score
+df_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_set["sentence"].map(str)+ "'\n'" + df_set["after"].map(str)+ "'\n'" +df_set["third"].map(str)))
+
+print(df_set.head())
 #Merging Feature
-df = pd.concat((df, df_feat1), axis=1)
+df_set = pd.concat((df_set, df_feat1), axis=1)
 
 
+print("concatenated DF:",df_set.head())
 #Preprocess Data
 # Create a list of the feature column's names
-features = df.columns[3:]
+features = df_set.columns[7:]
 
-print(features)
+print("Features",features)
 
 #Creating Training and Test Data
-df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
-print(df['is_train'])
+df_set['is_train'] = np.random.uniform(0, 1, len(df_set)) <= .75
+#print(df['is_train'])
 
 # Create two new dataframes, one with the training rows, one with the test rows
-train, test = df[df['is_train']==True], df[df['is_train']==False]
+train, test = df_set[df_set['is_train']==True], df_set[df_set['is_train']==False]
 
 
-print(train.head())
-print(test.head())
+#print(train.head())
+#print(test.head())
 
 
 # Show the number of observations for the test and training dataframes
