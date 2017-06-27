@@ -9,6 +9,7 @@ import math
 import random as random
 
 from nltk.corpus import stopwords
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class sentfeature:
     global lexicon_directory
@@ -18,10 +19,8 @@ class sentfeature:
 
 
     def defsentfeatextractor(dataframe):
-        stop = stopwords.words('english')
 
-
-
+        sid = SentimentIntensityAnalyzer()
 
         data_review = pd.DataFrame(dataframe)
 
@@ -88,7 +87,25 @@ class sentfeature:
         data_review= data_review[['negative_word_count','positive_word_count','tokens','factual','sentiment']]
         #print(data_review[['negative_word_count','positive_word_count'] ])
 
-        return data_review[['negative_word_count','positive_word_count'] ]
+
+        for index, row in data_review.iterrows():
+            # print(row['tokens'])
+            cleaned_text = filter(lambda x: x not in stop_words, row['tokens'])
+            wordlist = nltk.FreqDist(cleaned_text)
+            word_features = wordlist.items()
+            print(word_features)
+
+        print(data_review.head(20))
+
+        def print_sentiment_scores(sentence):
+            sent = ""
+            snt = sid.polarity_scores(sentence)
+            return snt['compound']
+
+        data_review['vander_score'] = df["text"].apply(print_sentiment_scores)
+        print(data_review.head(20))
+
+        return data_review[['negative_word_count','positive_word_count','vander_score']]
 
 
 
