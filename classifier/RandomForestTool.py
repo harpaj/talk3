@@ -15,15 +15,16 @@ from textblob import TextBlob
 from sentimentFeature import sentfeature as sn
 from sklearn.feature_extraction.text import TfidfVectorizer
 #end of method
+data_dir = '../data'
 
 
 print(csv.field_size_limit())
 # Create a dataframe with the four feature variables
-df_train_set = pd.read_csv('D:/Projects/TALK-3/Annotation/Atin/dataset_train.csv')
+df_train_set = pd.read_csv(data_dir + '/dataset_train.csv')
 print("File dataset", df_train_set.head())
 df_train_set = pd.DataFrame(df_train_set)
 
-df_test_set = pd.read_csv('D:/Projects/TALK-3/Annotation/Atin/dataset_test.csv')
+df_test_set = pd.read_csv(data_dir +'/dataset_test.csv')
 #original_col = df_train_set.columns;
 #print(original_col)
 

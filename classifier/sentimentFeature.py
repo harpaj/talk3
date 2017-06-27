@@ -12,9 +12,9 @@ from nltk.corpus import stopwords
 
 class sentfeature:
     global lexicon_directory
-    lexicon_directory = 'C:/Users/Atin/Documents/GitHub/New folder/talk3/data/opinion-lexicon-English'
+    lexicon_directory = '../data/opinion-lexicon-English'
     global data_dir
-    data_dir = 'C:/Users/Atin/Documents/GitHub/New folder/talk3/data'
+    data_dir = '../data'
 
 
     def defsentfeatextractor(dataframe):
