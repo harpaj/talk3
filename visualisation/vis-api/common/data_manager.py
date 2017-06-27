@@ -175,18 +175,20 @@ class DataManager(object):
             for thread, thread_group in thread_groups:
                 sentences = thread_group.sort_values(
                     ["factuality", "agrees", "timestamp"], ascending=False
-                ).head(5).sort_values("timestamp", ascending=False)[[
-                    "url", "sentence", "sentiment", "factuality", "author_id", "timestamp"
-                ]].to_json(orient='records')
+                ).head(5).sort_values("timestamp")[[
+                    "url", "sentence", "sentiment", "factuality", "author_id", "timestamp",
+                    "agrees"
+                ]]
+                sentences["timestamp"] = sentences["timestamp"].dt.strftime("%Y-%m-%d %H:%M")
                 threads.append({
                     "thread_id": thread,
                     "size": len(thread_group.index),
-                    "sentences": json.loads(sentences)
+                    "sentences": json.loads(sentences.to_json(orient="records"))
                 })
             detailed_data["threads"] = threads
             treatment_detailed_data[label] = detailed_data
 
-            break
+            # break
 
         return treatment_summaries, treatment_graph_data, treatment_detailed_data
 

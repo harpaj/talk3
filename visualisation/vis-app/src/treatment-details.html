@@ -63,10 +63,41 @@
         </a>
       </div>
     </div>
-    <!--
-    <div class="hr"></div>
     <div class="pure-g">
+      <div class="pure-u-1">
+        <ul class="treatments">
+          <li repeat.for="thread of treatment.threads" class="box-item">
+            <div class="details-box box-link">
+              <div class="pure-g">
+                <div class="pure-u-3-4 thread-header">
+                  <a href="https://tinnitustalk.com/threads/${thread.thread_id}" target="_blank">
+                    ${thread.thread_id}
+                  </a>
+                </div>
+                <div class="pure-u-1-4 thread-header center">
+                  ${thread.size} mentions
+                </div>
+              </div>
+              <ul class="sentences">
+                <li repeat.for="sentence of thread.sentences" class="box-item">
+                  <a class="sentence-box ${(sentence.sentiment > 0.05) ? 'posbox' : (sentence.sentiment < -0.05) ? 'negbox' : 'neubox'}" href="https://tinnitustalk.com/${sentence.url}" target="_blank">
+                    <div class="pure-g">
+                      <div class="pure-u-3-4 sentence-text">
+                        ${sentence.sentence}
+                      </div>
+                      <div class="pure-u-1-4 center sentence-details">
+                        <p>${sentence.author_id}</p>
+                        <p>${sentence.timestamp}</p>
+                        <p>${sentence.agrees} agree(s) - own opinion: ${sentence.factuality}</p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-    -->
   </div>
 </template>

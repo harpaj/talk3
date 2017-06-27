@@ -98,24 +98,25 @@ ul.treatments {
 }
 
 li.treatment-item {
-  list-style: none;
   background-color: #f5f5f5;
   color: #131517;
   border: 1px solid #eee;
-  margin-bottom: 10px;
-  padding: 0;
-  border-radius: 3px;
 }
 
-a.treatment-link {
+li.box-item {
+  list-style: none;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+a.box-link {
   padding: 5px;
   text-decoration: none;
   display: block;
   color: inherit;
-  background:inherit;
 }
 
-a.treatment-link:hover {
+a.box-link:hover {
   background-color: #eee;
 }
 
@@ -137,6 +138,7 @@ p {
 p.treatment-name {
   font-size: 18pt;
   color: #235789;
+  font-weight: bold;
 }
 
 p.treatment-names {
@@ -250,4 +252,82 @@ a.details-box.active {
   height: 1px;
   background-color: #131517;
   margin: 10px 0;
+}
+
+.thread-header {
+  box-sizing: border-box;
+  font-size: 18pt;
+  padding: 0 5px 5px;
+}
+
+.thread-header a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
+
+.thread-header a:hover {
+  text-decoration: underline;
+}
+
+.center {
+  text-align: center;
+}
+
+ul.sentences {
+  padding-left: 5px;
+}
+
+a.sentence-box {
+  padding: 5px;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  outline: 0;
+}
+
+a.sentence-box.posbox {
+  background-color: rgba(95,173,86,0.2);
+}
+
+a.sentence-box.neubox {
+  background-color: rgba(242,193,78,0.2);
+}
+
+a.sentence-box.negbox {
+  background-color: rgba(223,41,53,0.2);
+}
+
+a.sentence-box.posbox:hover {
+  background-color: rgba(95,173,86,0.4);
+}
+
+a.sentence-box.neubox:hover {
+  background-color: rgba(242,193,78,0.4);
+}
+
+a.sentence-box.negbox:hover {
+  background-color: rgba(223,41,53,0.4);
+}
+
+.sentence-text {
+  box-sizing: border-box;
+  padding-right: 10px;
+}
+
+.sentence-details {
+  box-sizing: border-box;
+  font-size: 10pt;
+}
+
+.posbox .sentence-details {
+  border-left: 1px solid rgb(95,173,86);
+}
+
+.neubox .sentence-details {
+  border-left: 1px solid rgb(242,193,78);
+}
+
+.negbox .sentence-details {
+  border-left: 1px solid rgb(223,41,53);
 }
