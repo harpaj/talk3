@@ -69,7 +69,7 @@ class sentfeature:
 
         #nltk.word_tokenize(df.get_value(0,'text'))
         data_review['tokens'] =df['cleaned'].apply(nltk.word_tokenize)
-        data_review['tokens'].apply(lambda x: [item for item in x if item not in stop])
+        data_review['tokens'].apply(lambda x: [item for item in x if item not in stop_words])
 
 
         #Count the number of tokens\

@@ -85,7 +85,7 @@ print("concatenated test data:", df_test_set.head())
 
 #Preprocess Data
 # Create a list of the feature column's names
-features = df_train_set.columns[7:]
+features = df_train_set.columns[8:]
 
 print("Features",features)
 
