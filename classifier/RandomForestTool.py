@@ -90,7 +90,7 @@ print("concatenated test data:", df_test_set.head())
 # Create a list of the feature column's names
 features = df_train_set.columns[8:]
 
-print("Features",features)
+print("Features:",features)
 
 #Creating Training and Test Data
 #df_train_set['is_train'] = np.random.uniform(0, 1, len(df_train_set)) <= .75
