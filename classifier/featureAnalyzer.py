@@ -11,7 +11,7 @@ import random as random
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-class sentfeature:
+class feat_analyser:
     global lexicon_directory
     lexicon_directory = '../data/opinion-lexicon-English'
     global data_dir

@@ -12,8 +12,11 @@ import numpy as np
 import  csv
 from nltk.corpus import stopwords
 from textblob import TextBlob
-from sentimentFeature import sentfeature as sn
+from featureAnalyzer import feat_analyser as sn
 from sklearn.feature_extraction.text import TfidfVectorizer
+import sklearn
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
 #end of method
 data_dir = '../data'
 
@@ -122,10 +125,12 @@ print(len(y2))
 
 
 Y=np.column_stack((y,y2))
-
+dict_cls_weight = [{0:1,1:3,2:3},{0:3,1:3}]
 #Train The Random Forest Classifier
 # Create a random forest classifier. By convention, clf means 'classifier'
-clf = RandomForestClassifier(n_jobs=2)
+
+sample_wt = sklearn.utils.class_weight.compute_sample_weight(dict_cls_weight,Y)
+clf = RandomForestClassifier(n_jobs=2,class_weight=dict_cls_weight)
 
 # Train the classifier to take the training features and learn how they relate
 # to the training y (the species)
@@ -133,7 +138,7 @@ print(df_train_set[features])
 print(df_test_set[features])
 
 
-clf.fit(df_train_set[features], Y)
+clf.fit(df_train_set[features], Y,sample_weight=sample_wt)
 
 # Apply the classifier we trained to the test data (which, remember, it has never seen before)
 predict_result =clf.predict(df_test_set[features])
@@ -198,7 +203,28 @@ print("Test ",df_test_set['factual'])
 confusion_matrix=pd.crosstab(df_test_set['sentiment'], y_pred, rownames=['Actual Sentiment'], colnames=['Predicted Sentiment'],margins=True)
 print(confusion_matrix)
 
+#Precision
+print("Precision: ",precision_score(df_test_set['sentiment'], y_pred,average=None))
+print("Precision avg=micro: ",precision_score(df_test_set['sentiment'], y_pred,average='macro'))
+print("Precision avg=weighted: ",precision_score(df_test_set['sentiment'], y_pred,average='weighted'))
+#Recall
+
+print("Precision: ",recall_score(df_test_set['sentiment'], y_pred,average=None))
+print("Precision avg=micro: ",recall_score(df_test_set['sentiment'], y_pred,average='macro'))
+print("Precision avg=weighted: ",recall_score(df_test_set['sentiment'], y_pred,average='weighted'))
+
+
 
 # Create confusion matrix
 confusion_matrix=pd.crosstab(df_test_set['factual'], y2_pred, rownames=['Actual Factuality'], colnames=['Predicted Factuality'],margins=True)
 print(confusion_matrix)
+
+#Precision
+print("Precision: ",precision_score(df_test_set['factual'], y2_pred,average=None))
+print("Precision avg=micro: ",precision_score(df_test_set['factual'], y2_pred,average='macro'))
+print("Precision avg=weighted: ",precision_score(df_test_set['factual'], y2_pred,average='weighted'))
+
+#Recall
+print("Precision: ",recall_score(df_test_set['factual'], y2_pred,average=None))
+print("Precision avg=micro: ",recall_score(df_test_set['factual'], y2_pred,average='macro'))
+print("Precision avg=weighted: ",recall_score(df_test_set['factual'], y2_pred,average='weighted'))
