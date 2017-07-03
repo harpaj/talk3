@@ -16,7 +16,7 @@ class TreatmentDetector(object):
         self.reader = csv.DictReader(args.posts)
         self.writer = csv.DictWriter(
             args.output, self.reader.fieldnames +
-            ["before", "sentence", "after", "third", "treatments"])
+            ["sentence", "treatments"])
         self.writer.writeheader()
         self.punctuation_translator = str.maketrans('', '', string.punctuation)
         self.sentence_detector = nltk.data.load('tokenizers/punkt/english.pickle')
@@ -67,27 +67,31 @@ class TreatmentDetector(object):
 
     def detect_treatments(self):
         for post in self.reader:
-            for before, sentence, after, third in self.window_sliding(
-                self.sentence_splitting(post["text"]), 4
+            for sentence, after, third in self.window_sliding(
+                self.sentence_splitting(post["text"]), 3
             ):
-                if not sentence:
-                    continue
-                tokens = self.tokenise(self.normalise(sentence))
-                detected_treatments = self.find_treatments(tokens)
-                mapped_treatments = " | ".join([
-                    "{} ({})".format(t, self.treatment_mapping[t])
-                    for t in detected_treatments
-                ])
-                for t in detected_treatments:
-                    self.found_treatments[self.treatment_mapping[t]] += 1
-                if detected_treatments:
+                treatments = None
+                merged_sentence = []
+                for sent in (sentence, after, third):
+                    if not sent:
+                        break
+                    tokens = self.tokenise(self.normalise(sent))
+                    detected_treatments = self.find_treatments(tokens)
+                    mapped_treatments = [self.treatment_mapping[t] for t in detected_treatments]
+                    if treatments is None:
+                        for t in mapped_treatments:
+                            self.found_treatments[t] += 1
+                        treatments = mapped_treatments
+                        merged_sentence.append(sent)
+                    else:
+                        if set(mapped_treatments) - set(treatments):
+                            break
+                        merged_sentence.append(sent)
+                if treatments:
                     outp = post.copy()
                     outp.pop("text")
-                    outp["before"] = before.replace("\n", " ") if before else None
-                    outp["sentence"] = sentence.replace("\n", " ")
-                    outp["after"] = after.replace("\n", " ") if after else None
-                    outp["third"] = third.replace("\n", " ") if third else None
-                    outp["treatments"] = mapped_treatments
+                    outp["sentence"] = " ".join(merged_sentence).replace("\n", " ")
+                    outp["treatments"] = ", ".join(treatments)
                     self.writer.writerow(outp)
         pprint(self.found_treatments, sys.stderr)
 

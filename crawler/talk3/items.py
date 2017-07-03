@@ -11,5 +11,6 @@ class PostItem(Item):
     author_id = Field()
     url = Field()
     thread_id = Field()
+    thread_name = Field()
     position_in_thread = Field()
     agrees = Field()

@@ -74,6 +74,7 @@ class TinnitusTalkSpider(CrawlSpider):
         thread_id = re.search(
             "\/threads\/(.+\.\d+)\/(?:page\-\d+)?$", response.url
         ).group(1)
+        thread_name = sel.css(".titleBarContent h1 ::text").extract_first()
 
         posts = sel.css(".messageList .message")
         for post in posts:
@@ -89,6 +90,7 @@ class TinnitusTalkSpider(CrawlSpider):
             p["author_id"] = author[8:-1] if author else "GUEST-" + p["post_id"]
             p["url"] = post.css(".publicControls a").xpath('@href').extract_first()
             p["thread_id"] = thread_id
+            p["thread_name"] = thread_name
             p["position_in_thread"] = post.css(".publicControls a::text").extract_first()[1:]
             p["agrees"] = post.css(".likesSummary div ul").xpath(
                 "li[img[@title='Agree']]/strong/text()").extract_first() or '0'

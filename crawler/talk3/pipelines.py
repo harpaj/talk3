@@ -10,7 +10,7 @@ class Talk3Pipeline(object):
         self.fh = open("../data/talk3_posts.csv", "w")
         fields = [
             "subforum", "post_id", "text", "timestamp", "author_id", "url",
-            "thread_id", "position_in_thread", "agrees"]
+            "thread_id", "thread_name", "position_in_thread", "agrees"]
         self.writer = csv.DictWriter(self.fh, fields)
         self.writer.writeheader()
         self.seen_posts = set()
