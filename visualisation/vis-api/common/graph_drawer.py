@@ -1,37 +1,29 @@
 import logging
 
-from bokeh.charts import Area
-from bokeh.palettes import Inferno11
 from bokeh.models import Range1d, HoverTool, BoxAnnotation
 from bokeh.models.sources import ColumnDataSource
 from bokeh.embed import components
 from bokeh.plotting import figure
 import numpy as np
 
-x_range = Range1d(np.datetime64('2011', 'Y'), np.datetime64('2018', 'Y'), bounds='auto')
-
 
 class GraphDrawer(object):
-    def __init__(self, data_manager):
+    def __init__(self, data_manager, config):
         self.dm = data_manager
-        self.summary_graph = self.get_graph_embed_data()
+        self.config = config
         self.treatment_score_graphs = self.get_treatment_score_graphs()
         self.treatment_count_graphs = self.get_treatment_count_graphs(relative=False)
         self.treatment_relative_graphs = self.get_treatment_count_graphs(relative=True)
         logging.info("All graph data prepared")
 
-    def get_graph_embed_data(self):
-        area = Area(
-            self.dm.data_month_crosstab,
-            x_range=Range1d(np.datetime64('2011', 'Y'), np.datetime64('2018', 'Y'), bounds='auto'),
-            tools='xwheel_zoom,xpan,reset,save',
-            active_scroll='xwheel_zoom',
-            active_drag='xpan',
-            palette=Inferno11,
-            stack=True,
-            plot_width=1000
+    @property
+    def x_range(self):
+        return Range1d(
+            np.datetime64(self.config["range"]["start"], 'M'),
+            np.datetime64(self.config["range"]["end"], 'M'),
+            bounds='auto',
+            min_interval=np.timedelta64(365, 'D')
         )
-        return components(area)
 
     def get_treatment_score_graphs(self):
         graphs = {}
@@ -39,7 +31,7 @@ class GraphDrawer(object):
             p = figure(
                 y_axis_label='score',
                 x_axis_type='datetime',
-                x_range=x_range,
+                x_range=self.x_range,
                 tools='xwheel_zoom,xpan,reset,save',
                 active_scroll='xwheel_zoom',
                 active_drag='xpan',
@@ -78,7 +70,7 @@ class GraphDrawer(object):
             p = figure(
                 y_axis_label='% of posts' if relative else 'posts',
                 x_axis_type='datetime',
-                x_range=x_range,
+                x_range=self.x_range,
                 tools='xwheel_zoom,xpan,reset,save',
                 active_scroll='xwheel_zoom',
                 active_drag='xpan',

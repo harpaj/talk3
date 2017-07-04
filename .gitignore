@@ -1,5 +1,6 @@
 data/
-
+config.cfg
+.idea
 
 # copied from https://github.com/github/gitignore/blob/master/Python.gitignore
 # Byte-compiled / optimized / DLL files

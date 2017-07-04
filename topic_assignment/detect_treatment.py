@@ -91,7 +91,7 @@ class TreatmentDetector(object):
                     outp = post.copy()
                     outp.pop("text")
                     outp["sentence"] = " ".join(merged_sentence).replace("\n", " ")
-                    outp["treatments"] = ", ".join(treatments)
+                    outp["treatments"] = ", ".join(set(treatments))
                     self.writer.writerow(outp)
         pprint(self.found_treatments, sys.stderr)
 

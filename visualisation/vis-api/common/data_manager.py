@@ -22,19 +22,20 @@ agree_weight = 0.5
 
 
 class DataManager(object):
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         logging.info("Started calculating data (this will take a bit)")
-        self.df = self.prepare_initial_dataframe()
-        self.data_month_crosstab = self.data_month_crosstab()
-        self.treatment_mapping = self.prepare_treatment_definitons()
+        self.df = self.prepare_initial_dataframe(self.config["paths"]["sentences"])
+        self.treatment_mapping = self.prepare_treatment_definitons(
+            self.config["paths"]["definitons"])
         self.treatment_summaries, self.treatment_graphs, self.treatment_detailed_data = \
             self.prepare_treatment_summaries()
         logging.info("All data calculated")
 
     @staticmethod
-    def prepare_initial_dataframe():
+    def prepare_initial_dataframe(data_file):
         df = pandas.read_csv(
-            open("/home/johannes/talk3/data/treatment_detected_linewise.csv", 'r'),
+            open(data_file, 'r'),
             usecols=[
                 'subforum', 'post_id', 'timestamp', 'sentence', 'treatments', 'thread_id',
                 'url', 'author_id', 'sentiment', 'factuality', 'agrees'
@@ -56,9 +57,9 @@ class DataManager(object):
         return df
 
     @staticmethod
-    def prepare_treatment_definitons():
+    def prepare_treatment_definitons(definiton_file):
         treatment_mapping = {}
-        with open("/home/johannes/talk3/data/treatment_definitons.txt", 'r') as fh:
+        with open(definiton_file, 'r') as fh:
             reader = csv.reader(fh, skipinitialspace=True)
             for line in reader:
                 treatment_mapping[line[0]] = line[1:]
@@ -156,7 +157,10 @@ class DataManager(object):
             month_groups = post_scores.groupby('month')[
                 'month', 'weight', 'weighted_sentiment'
             ].apply(month_group).drop_duplicates().sort_values('month').set_index('month').reindex(
-                pandas.DatetimeIndex(np.arange('2011-01', '2017-12', dtype='datetime64[M]')),
+                pandas.DatetimeIndex(np.arange(
+                    self.config["range"]["start"],
+                    self.config["range"]["end"],
+                    dtype='datetime64[M]')),
                 fill_value=0
             )
             # bokeh can't read from the index, so we have to add it as a column
@@ -188,18 +192,6 @@ class DataManager(object):
             detailed_data["threads"] = threads
             treatment_detailed_data[label] = detailed_data
 
-            # break
+            break
 
         return treatment_summaries, treatment_graph_data, treatment_detailed_data
-
-    def data_month_crosstab(self):
-        tr_mon = pandas.crosstab(self.df["treatments"], self.df["month"])
-        tr_mon["sum"] = tr_mon.sum(axis=1)
-        tr_mon.sort_values("sum", ascending=False, inplace=True)
-        tr_mon = tr_mon.drop("sum", 1)
-        head = tr_mon.head(10)
-        tail = tr_mon.tail(len(tr_mon.index) - 10).sum(axis=0)
-        tail.name = "Rest"
-        tr_mon = head.append(tail)
-        tr_mon = tr_mon.T
-        return tr_mon
