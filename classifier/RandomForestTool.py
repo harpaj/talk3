@@ -125,7 +125,7 @@ print(len(y2))
 
 
 Y=np.column_stack((y,y2))
-dict_cls_weight = [{0:1,1:3,2:3},{0:3,1:3}]
+dict_cls_weight = [{0:1,1:5,2:5},{0:1,1:1}]
 #Train The Random Forest Classifier
 # Create a random forest classifier. By convention, clf means 'classifier'
 
