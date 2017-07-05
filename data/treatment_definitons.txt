@@ -1,10 +1,10 @@
 acamprosate, campral
 acoustic cr neuromodulation, acoustic coordinated reset neuromodulation,  neuromodulation, neuromodulator, anm, acrn, acm
 acupuncture
-AM-101, am 101
-antidepressant, antidepressants, ssri, ssris, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
+AM-101, am101
+antidepressant, antidepressants, anti depressant, anti depressants, ssri, ssris, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
 aripiprazole, abilify
-back to silence, back-to-silence
+back-to-silence
 betahistine, betaserc, veserc, serc, hiserk, vergo
 cannabis, marijuana, cbd, cbds, cannabidiol, thc, tetrahydrocannabinol, hemp
 carbamazepine, tegretol, equetro
@@ -20,7 +20,6 @@ gabapentin, neurontin, gaba
 ginkgo, biloba, ginko, tebonin
 hyperbaric oxygen therapy, hyperbaric, hbot, hbo
 levetiracetam,keppra
-lidocaine, dexamethasone
 lipoflavonoid
 low-level laser therapy, lllt, laser
 magnesium, magnesium citrate, magnesium chloride

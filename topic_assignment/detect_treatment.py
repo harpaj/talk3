@@ -18,7 +18,8 @@ class TreatmentDetector(object):
             args.output, self.reader.fieldnames +
             ["sentence", "treatments"])
         self.writer.writeheader()
-        self.punctuation_translator = str.maketrans('', '', string.punctuation)
+        self.punctuation_translator = str.maketrans(
+            string.punctuation, " " * len(string.punctuation))
         self.sentence_detector = nltk.data.load('tokenizers/punkt/english.pickle')
         self.treatment_set, self.treatment_mapping, self.max_treatment_length =\
             self.parse_treatment_definitons(args.definitons)
@@ -40,7 +41,9 @@ class TreatmentDetector(object):
         return treatment_set, treatment_mapping, max_length
 
     def normalise(self, text):
-        return text.translate(self.punctuation_translator).replace("\n", " ").lower()
+        return " ".join(
+            text.translate(self.punctuation_translator).replace("\n", " ").lower().split()
+        )
 
     @staticmethod
     def tokenise(text):
@@ -94,6 +97,7 @@ class TreatmentDetector(object):
                     outp["treatments"] = ", ".join(set(treatments))
                     self.writer.writerow(outp)
         pprint(self.found_treatments, sys.stderr)
+        pprint(sum(self.found_treatments.values()), sys.stderr)
 
 
 def parse_args():
