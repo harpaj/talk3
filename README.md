@@ -2,6 +2,7 @@
 
 ## additional installation steps
 * get model for sentence splitter: `python3 -m nltk.downloader punkt`
+* get lexicon for "vader" feature: `python3 -m nltk.downloader vader_lexicon`
 
 ## crawler
 * crawls https://tinnitustalk.com, stores the result in `data/talk3_posts.csv`

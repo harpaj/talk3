@@ -3,3 +3,7 @@ lxml
 nltk
 pandas
 bokeh
+tornado
+sklearn
+scipy
+textblob
