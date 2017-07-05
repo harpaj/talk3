@@ -56,8 +56,7 @@ class feat_analyser:
 
         #merge coloumns before , sentence,after and third
         df=pd.DataFrame(data_review)
-        df["text"] = df["sentence"].map(str)+ "'\n'" + df["after"].map(str)+ "'\n'" +df["third"].map(str)
-
+        df["text"] = df["sentence"]
         def remove_punctuation(s):
             s = ''.join([i for i in s if i not in frozenset(string.punctuation)])
             return s
@@ -84,7 +83,7 @@ class feat_analyser:
 
         data_review['negative_word_count'] = data_review['tokens'].apply(lambda tokens: len(negative_words.intersection(tokens)))
 
-        data_review= data_review[['negative_word_count','positive_word_count','tokens','factual','sentiment']]
+        data_review= data_review[['negative_word_count','positive_word_count','tokens']]
         #print(data_review[['negative_word_count','positive_word_count'] ])
 
 
@@ -93,17 +92,17 @@ class feat_analyser:
             cleaned_text = filter(lambda x: x not in stop_words, row['tokens'])
             wordlist = nltk.FreqDist(cleaned_text)
             word_features = wordlist.items()
-            print(word_features)
+            #print(word_features)
 
-        print(data_review.head(20))
+        #print(data_review.head(20))
 
         def print_sentiment_scores(sentence):
             sent = ""
             snt = sid.polarity_scores(sentence)
             return snt['compound']
 
-        data_review['vander_score'] = df["text"].apply(print_sentiment_scores)
-        print(data_review.head(20))
+        data_review['vander_score'] = df['text'].apply(print_sentiment_scores)
+        #print(data_review.head(20))
 
         return data_review[['negative_word_count','positive_word_count','vander_score']]
 

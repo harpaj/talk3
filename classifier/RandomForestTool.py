@@ -21,13 +21,16 @@ from sklearn.metrics import recall_score
 data_dir = '../data'
 
 
-print(csv.field_size_limit())
+#print(csv.field_size_limit())
 # Create a dataframe with the four feature variables
 df_train_set = pd.read_csv(data_dir + '/dataset_train.csv')
-print("File dataset", df_train_set.head())
+#print("File dataset", df_train_set.head())
 df_train_set = pd.DataFrame(df_train_set)
 
 df_test_set = pd.read_csv(data_dir +'/dataset_test.csv')
+
+df_final_set=pd.read_csv(data_dir +'/treatment_detected.csv')
+
 #original_col = df_train_set.columns;
 #print(original_col)
 
@@ -38,6 +41,12 @@ df_train_feat1 = sn.defsentfeatextractor(df_train_set)
 df_train_set = df_train_set.filter(['post_id', 'sentence', 'after', 'third', 'treatments', 'sentiment', 'factual'], axis=1)
 
 
+##new data
+#extract features into a set
+df_final_feat = sn.defsentfeatextractor(df_final_set)
+print(df_final_feat.head(2))
+df_final_set=df_final_set.filter(['post_id', 'sentence','treatments'])
+print("final",df_final_set.head(10))
 #For Testing Data
 df_test_feat1 = sn.defsentfeatextractor(df_test_set)
 df_test_set = df_test_set.filter(['post_id', 'sentence', 'after', 'third', 'treatments', 'sentiment', 'factual'], axis=1)
@@ -46,6 +55,7 @@ df_test_set = df_test_set.filter(['post_id', 'sentence', 'after', 'third', 'trea
 
 #2. TF-IDF
 #Train Data
+"""
 vectorizer = TfidfVectorizer(min_df=1)
 tfidf = vectorizer.fit_transform(df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)).toarray()
 tfidf_train_df = pd.DataFrame(tfidf, columns=[("tfidf_" + str(i)) for i in range(len(tfidf[0]))])
@@ -60,7 +70,7 @@ tfidf2 = vectorizer.transform(df_test_set["sentence"].map(str) + "'\n'" + df_tes
 tfidf_test_df = pd.DataFrame(tfidf2, columns=[("tfidf_" + str(i)) for i in range(len(tfidf2[0]))])
 df_test_set = pd.concat((df_test_set, tfidf_test_df), axis=1)
 
-
+"""
 
 #3. Polarity Score
 #For Training Data
@@ -68,12 +78,15 @@ df_train_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_train_set
 #For Test Data
 df_test_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
 
+df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
+#print(df_final_set.head(2))
 #4. Subjectivity Score
 #For Training Data
+
 df_train_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
 #For Test Data
 df_test_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
-
+df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
 
 #Merging Feature
 #Training Data
@@ -82,15 +95,20 @@ df_train_set = pd.concat((df_train_set, df_train_feat1), axis=1)
 #Test Data
 df_test_set = pd.concat((df_test_set, df_test_feat1), axis=1)
 
+df_final_set =pd.concat((df_final_set,df_final_feat),axis=1)
+print("desc",df_final_set.describe())
+print(df_final_set.head(2))
+#print("concatenated train data:", df_train_set.head())
+#print("concatenated test data:", df_test_set.head())
 
-print("concatenated train data:", df_train_set.head())
-print("concatenated test data:", df_test_set.head())
 
 #Preprocess Data
 # Create a list of the feature column's names
-features = df_train_set.columns[8:]
-
+features = df_train_set.columns[7:]
+final_features=pd.DataFrame
+final_features=df_final_set[['negative_word_count','positive_word_count','polarity','subjectivity','vander_score']]
 print("Features:",features)
+print("Final fe",final_features.head(50))
 
 #Creating Training and Test Data
 #df_train_set['is_train'] = np.random.uniform(0, 1, len(df_train_set)) <= .75
@@ -105,8 +123,8 @@ print("Features:",features)
 
 
 # Show the number of observations for the test and training dataframes
-print('Number of observations in the training data:', len(df_train_set))
-print('Number of observations in the test data:',len(df_test_set))
+#print('Number of observations in the training data:', len(df_train_set))
+#print('Number of observations in the test data:',len(df_test_set))
 
 
 
@@ -134,17 +152,41 @@ clf = RandomForestClassifier(n_jobs=2,class_weight=dict_cls_weight)
 
 # Train the classifier to take the training features and learn how they relate
 # to the training y (the species)
-print(df_train_set[features])
-print(df_test_set[features])
+#print(df_train_set[features])
+#print(df_test_set[features])
 
 
 clf.fit(df_train_set[features], Y,sample_weight=sample_wt)
 
 # Apply the classifier we trained to the test data (which, remember, it has never seen before)
-predict_result =clf.predict(df_test_set[features])
+#predict_result =clf.predict(df_test_set[features])
+print("before",final_features.describe())
 
-print(predict_result)
+""" tried this part"""
+groups = final_features.groupby(final_features.index // 1000)
+for group in groups(final_features.index, 10000):
+    predict_result=group.apply(clf.predict)
+    print("predict", predict_result)
 
+"""tried this part""
+"""
+"""
+np.array_split(final_features,100)
+for  i in np:
+    print(i.describe())
+
+np.nan_to_num(i)
+print("after",
+print("empty",i.isnull.any()))
+#df_final_set = df_final_set.fillna(lambda x: x.median())
+print("empty",i.isnull().any())
+predict_result =clf.predict(i)
+print("predict",predict_result)
+
+for g, df in test.groupby(np.arange(len(test)) // 400):
+    print(df.shape)
+
+""""""
 #encoded value for sentiment
 A = np.array(predict_result)
 B=np.asmatrix(A)
@@ -179,7 +221,7 @@ print(C2)
 #Evaluate classifier
 #predicted values for sentiment
 y_pred = []
-for i in range(len(df_test_set)):
+for i in range(len(df_final_set)):
     print(y_index[C[i]])
     y_pred.append(y_index[C[i]])
 #print(preds2)
@@ -190,7 +232,7 @@ print("Test ",df_test_set['sentiment'])
 
 #predicted values for factual
 y2_pred = []
-for i in range(len(df_test_set)):
+for i in range(len(df_final_set)):
     print(y2_index[C2[i]])
     y2_pred.append(y2_index[C2[i]])
 #print(preds2)
@@ -228,3 +270,6 @@ print("Precision avg=weighted: ",precision_score(df_test_set['factual'], y2_pred
 print("Precision: ",recall_score(df_test_set['factual'], y2_pred,average=None))
 print("Precision avg=micro: ",recall_score(df_test_set['factual'], y2_pred,average='macro'))
 print("Precision avg=weighted: ",recall_score(df_test_set['factual'], y2_pred,average='weighted'))
+
+"""
+
