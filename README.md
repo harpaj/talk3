@@ -19,3 +19,6 @@ outputs all posts that a treatment was detected in with the treatment name in an
 ```bash
 < data/talk3_posts.csv python3 topic_assignment/detect_treatment.py -d data/treatment_definitons.txt > data/treatment_detected.csv
 ```
+#class assignment
+Index(['neu', 'neg', 'pos'], dtype='object') 
+Index(['no', 'yes'], dtype='object')
