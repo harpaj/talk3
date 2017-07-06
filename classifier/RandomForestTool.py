@@ -29,7 +29,7 @@ df_train_set = pd.DataFrame(df_train_set)
 
 df_test_set = pd.read_csv(data_dir +'/dataset_test.csv')
 
-df_final_set=pd.read_csv(data_dir +'/treatment_detected.csv')
+df_final_set_original=pd.read_csv(data_dir +'/treatment_detected.csv')
 
 #original_col = df_train_set.columns;
 #print(original_col)
@@ -43,9 +43,9 @@ df_train_set = df_train_set.filter(['post_id', 'sentence', 'after', 'third', 'tr
 
 ##new data
 #extract features into a set
-df_final_feat = sn.defsentfeatextractor(df_final_set)
+df_final_feat = sn.defsentfeatextractor(df_final_set_original)
 print(df_final_feat.head(2))
-df_final_set=df_final_set.filter(['post_id', 'sentence','treatments'])
+df_final_set=df_final_set_original.filter(['post_id', 'sentence','treatments'])
 print("final",df_final_set.head(10))
 #For Testing Data
 df_test_feat1 = sn.defsentfeatextractor(df_test_set)
@@ -163,30 +163,33 @@ clf.fit(df_train_set[features], Y,sample_weight=sample_wt)
 print("before",final_features.describe())
 
 """ tried this part"""
-groups = final_features.groupby(final_features.index // 1000)
-for group in groups(final_features.index, 10000):
-    predict_result=group.apply(clf.predict)
+"""groups = final_features.groupby(final_features.index // 1000)
+for group in groups:
+    predict_result=clf.predict(group.fillna(0))
     print("predict", predict_result)
 
-"""tried this part""
 """
+predict_result=pd.DataFrame()
+#predict_result_final=pd.DataFrame()
+groups = final_features.groupby(final_features.index // 10000)
+for _, group in groups:
+    #predict_result = clf.predict(group.fillna(0))
+    predict_result = pd.concat([predict_result, pd.DataFrame(clf.predict(group.fillna(0)))], ignore_index=True)
+
+
+
+print("predict", predict_result)
+
+print("original",df_final_set_original.head(2))
+final_visual=pd.concat([predict_result,df_final_set_original[['subforum','post_id','timestamp','author_id','url','thread_id','thread_name','position_in_thread','agrees','sentence','treatments'] ]],axis=1)
+print("visual",final_visual)
+final_visual.to_csv(data_dir + "/output.csv", sep='\t', encoding='utf-8')
+
+
+
+
+
 """
-np.array_split(final_features,100)
-for  i in np:
-    print(i.describe())
-
-np.nan_to_num(i)
-print("after",
-print("empty",i.isnull.any()))
-#df_final_set = df_final_set.fillna(lambda x: x.median())
-print("empty",i.isnull().any())
-predict_result =clf.predict(i)
-print("predict",predict_result)
-
-for g, df in test.groupby(np.arange(len(test)) // 400):
-    print(df.shape)
-
-""""""
 #encoded value for sentiment
 A = np.array(predict_result)
 B=np.asmatrix(A)
