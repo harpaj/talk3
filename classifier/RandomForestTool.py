@@ -169,6 +169,20 @@ for group in groups:
     print("predict", predict_result)
 
 """
+sentiment_mapping = {
+    2: "pos",
+    0: "neu",
+    1: "neg"
+}
+
+factuality_mapping = {
+    1: "yes",
+    0: "no"
+}
+
+
+
+
 predict_result=pd.DataFrame()
 #predict_result_final=pd.DataFrame()
 groups = final_features.groupby(final_features.index // 10000)
@@ -181,9 +195,12 @@ for _, group in groups:
 print("predict", predict_result)
 
 print("original",df_final_set_original.head(2))
+predict_result.columns = ["sentiment", "factuality"]
+predict_result["sentiment"] = predict_result["sentiment"].apply(lambda s: sentiment_mapping[s])
+predict_result["factuality"] = predict_result["factuality"].apply(lambda f: factuality_mapping[f])
 final_visual=pd.concat([predict_result,df_final_set_original[['subforum','post_id','timestamp','author_id','url','thread_id','thread_name','position_in_thread','agrees','sentence','treatments'] ]],axis=1)
 print("visual",final_visual)
-final_visual.to_csv(data_dir + "/output.csv", sep='\t', encoding='utf-8')
+final_visual.to_csv(data_dir + "/sentences_classified.csv", encoding='utf-8', index=False)
 
 
 
@@ -275,4 +292,3 @@ print("Precision avg=micro: ",recall_score(df_test_set['factual'], y2_pred,avera
 print("Precision avg=weighted: ",recall_score(df_test_set['factual'], y2_pred,average='weighted'))
 
 """
-
