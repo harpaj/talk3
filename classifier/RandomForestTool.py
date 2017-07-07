@@ -13,8 +13,8 @@ import  csv
 from nltk.corpus import stopwords
 from textblob import TextBlob
 from featureAnalyzer import feat_analyser as sn
-from featureAnalyzer import count_pronouns
-from featureAnalyzer import get_trivial_score
+
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 import sklearn
 from sklearn.metrics import precision_score
@@ -103,18 +103,18 @@ df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_final_
 
 #5. Personal Pronoun counts
 #Train Data
-df_pron_count_train = pd.DataFrame((list(count_pronouns(x)) for x in df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_pron_count_train = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
 df_train_set = pd.concat((df_train_set, df_pron_count_train), axis=1)
 
 #For New Data
-df_pron_count_final_set = pd.DataFrame((list(count_pronouns(x)) for x in df_final_set['sentence'].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_pron_count_final_set = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_final_set['sentence'].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
 df_final_set = pd.concat((df_final_set, df_pron_count_final_set), axis=1)
 
 #5. Trivial Score
 #Train Data
-df_train_set['trivial_score'] = pd.Series(get_trivial_score(x) for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
+df_train_set['trivial_score'] = pd.Series(sn.get_trivial_score(x) for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
 #For New Data
-df_final_set['trivial_score']= pd.Series((get_trivial_score(x) for x in (df_final_set["sentence"].map(str))))
+df_final_set['trivial_score']= pd.Series((sn.get_trivial_score(x) for x in (df_final_set["sentence"].map(str))))
 
 #Merging Feature
 #Training Data
@@ -134,7 +134,9 @@ print(df_final_set.head(2))
 # Create a list of the feature column's names
 features = df_train_set.columns[7:]
 final_features=pd.DataFrame
-final_features=df_final_set[['negative_word_count','positive_word_count','polarity','subjectivity','vander_score']]
+#changed on 07-07-2017 by Atin
+#final_features=df_final_set[['negative_word_count','positive_word_count','polarity','subjectivity','vander_score']]
+final_features=df_final_set[['polarity', 'subjectivity', 'first_per_pron', 'sec_per_pron', 'Third_per_pron', 'personal_pron', 'total_pron', 'sing_proper_noun', 'trivial_score', 'negative_word_count', 'positive_word_count', 'vander_score']]
 print("Features:",features)
 print("Final fe",final_features.head(50))
 
