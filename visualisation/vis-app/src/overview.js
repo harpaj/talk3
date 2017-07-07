@@ -1,4 +1,5 @@
 import {HttpClient} from 'aurelia-fetch-client';
+import environment from './environment';
 
 export class Overview {
   constructor() {
@@ -13,7 +14,7 @@ export class Overview {
 
   activate() {
     var self = this;
-    return this.client.fetch('http://localhost:8765/treatment_summary')
+    return this.client.fetch(environment.api_base_url + '/treatment_summary')
     .then(response => response.json())
     .then(data => {
       this.treatments = this.all_treatments = data.treatment_list.sort(

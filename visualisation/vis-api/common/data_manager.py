@@ -38,7 +38,7 @@ class DataManager(object):
             open(data_file, 'r'),
             usecols=[
                 'subforum', 'post_id', 'timestamp', 'sentence', 'treatments', 'thread_id',
-                'url', 'author_id', 'sentiment', 'factuality', 'agrees'
+                'thread_name', 'url', 'author_id', 'sentiment', 'factuality', 'agrees'
             ],
             index_col=None,
             parse_dates=['timestamp'],
@@ -54,6 +54,16 @@ class DataManager(object):
             axis=1
         )
         df["weighted_sentiment"] = df["weight"] * df["sentiment"]
+
+        # split treatments into multiple rows
+        # code adopted from https://stackoverflow.com/a/40449726
+
+        df = df.assign(**{"treatments": df["treatments"].str.split(', ')})
+        df = pandas.DataFrame({
+            col: np.repeat(df[col].values, df["treatments"].str.len())
+            for col in df.columns.difference(["treatments"])
+        }).assign(**{"treatments": np.concatenate(df["treatments"].values)})[df.columns.tolist()]
+
         return df
 
     @staticmethod
@@ -177,6 +187,7 @@ class DataManager(object):
 
             threads = []
             for thread, thread_group in thread_groups:
+                thread_name = thread_group["thread_name"].iloc[0]
                 sentences = thread_group.sort_values(
                     ["factuality", "agrees", "timestamp"], ascending=False
                 ).head(5).sort_values("timestamp")[[
@@ -186,12 +197,13 @@ class DataManager(object):
                 sentences["timestamp"] = sentences["timestamp"].dt.strftime("%Y-%m-%d %H:%M")
                 threads.append({
                     "thread_id": thread,
+                    "thread_name": thread_name,
                     "size": len(thread_group.index),
                     "sentences": json.loads(sentences.to_json(orient="records"))
                 })
             detailed_data["threads"] = threads
             treatment_detailed_data[label] = detailed_data
 
-            break
+            # break
 
         return treatment_summaries, treatment_graph_data, treatment_detailed_data

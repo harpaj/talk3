@@ -1,4 +1,5 @@
 import {HttpClient} from 'aurelia-fetch-client';
+import environment from './environment';
 
 export class Overview {
 
@@ -19,7 +20,7 @@ export class Overview {
 
   activate(params) {
     this.name = params.name;
-    return this.client.fetch('http://localhost:8765/treatment/' + params.name)
+    return this.client.fetch(environment.api_base_url + '/treatment/' + params.name)
     .then(response => response.json())
     .then(data => {
       this.treatment = data;
