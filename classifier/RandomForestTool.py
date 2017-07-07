@@ -13,6 +13,8 @@ import  csv
 from nltk.corpus import stopwords
 from textblob import TextBlob
 from featureAnalyzer import feat_analyser as sn
+from featureAnalyzer import count_pronouns
+from featureAnalyzer import get_trivial_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 import sklearn
 from sklearn.metrics import precision_score
@@ -47,6 +49,7 @@ df_final_feat = sn.defsentfeatextractor(df_final_set_original)
 print(df_final_feat.head(2))
 df_final_set=df_final_set_original.filter(['post_id', 'sentence','treatments'])
 print("final",df_final_set.head(10))
+
 #For Testing Data
 df_test_feat1 = sn.defsentfeatextractor(df_test_set)
 df_test_set = df_test_set.filter(['post_id', 'sentence', 'after', 'third', 'treatments', 'sentiment', 'factual'], axis=1)
@@ -77,16 +80,41 @@ df_test_set = pd.concat((df_test_set, tfidf_test_df), axis=1)
 df_train_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
 #For Test Data
 df_test_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
+#commented on 07-07-2017 by Atin
+#df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
+df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_final_set["sentence"].map(str))))
 
-df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
+
+
 #print(df_final_set.head(2))
+
+
+
 #4. Subjectivity Score
 #For Training Data
 
 df_train_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
 #For Test Data
 df_test_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
-df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
+#commented on 07-07-2017 by Atin
+#df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
+df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_final_set["sentence"].map(str))))
+
+
+#5. Personal Pronoun counts
+#Train Data
+df_pron_count_train = pd.DataFrame((list(count_pronouns(x)) for x in df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_train_set = pd.concat((df_train_set, df_pron_count_train), axis=1)
+
+#For New Data
+df_pron_count_final_set = pd.DataFrame((list(count_pronouns(x)) for x in df_final_set['sentence'].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_final_set = pd.concat((df_final_set, df_pron_count_final_set), axis=1)
+
+#5. Trivial Score
+#Train Data
+df_train_set['trivial_score'] = pd.Series(get_trivial_score(x) for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
+#For New Data
+df_final_set['trivial_score']= pd.Series((get_trivial_score(x) for x in (df_final_set["sentence"].map(str))))
 
 #Merging Feature
 #Training Data
@@ -135,9 +163,13 @@ y , y_index  = pd.factorize(df_train_set['sentiment'])
 y2 , y2_index= pd.factorize(df_train_set['factual'])
 print(y)
 print(y_index)
+map_sent = list(y_index)
+print("map sent",map_sent)
 print("printing Y2")
 print(y2)
 print(y2_index)
+map_fact = list(y2_index)
+print("map fact",map_fact)
 print(len(y))
 print(len(y2))
 
@@ -169,6 +201,8 @@ for group in groups:
     print("predict", predict_result)
 
 """
+
+""" #commenting hardcoded mapping
 sentiment_mapping = {
     2: "pos",
     0: "neu",
@@ -180,8 +214,9 @@ factuality_mapping = {
     0: "no"
 }
 
-
-
+"""
+sentiment_mapping = {i:map_sent[i] for i in range(len(map_sent))}
+factuality_mapping = {i:map_fact[i] for i in range(len(map_fact))}
 
 predict_result=pd.DataFrame()
 #predict_result_final=pd.DataFrame()
@@ -196,6 +231,7 @@ print("predict", predict_result)
 
 print("original",df_final_set_original.head(2))
 predict_result.columns = ["sentiment", "factuality"]
+print("new sentiment",predict_result['sentiment'])
 predict_result["sentiment"] = predict_result["sentiment"].apply(lambda s: sentiment_mapping[s])
 predict_result["factuality"] = predict_result["factuality"].apply(lambda f: factuality_mapping[f])
 final_visual=pd.concat([predict_result,df_final_set_original[['subforum','post_id','timestamp','author_id','url','thread_id','thread_name','position_in_thread','agrees','sentence','treatments'] ]],axis=1)

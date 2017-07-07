@@ -2,11 +2,13 @@ import numpy as np
 import pandas as pd
 import nltk
 import string
+from collections import Counter
 import re
 import datetime
 import matplotlib.pyplot as plt
 import math
 import random as random
+from textblob import TextBlob
 
 from nltk.corpus import stopwords
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -109,4 +111,67 @@ class feat_analyser:
 
 
 
+
+    def get_trivial_score(line):
+        trivial_score = 2
+        line_sets = line.split('.' or '!' or '?')
+        regex_count = 0
+        for ln in line_sets:
+            print(ln)
+            matchObj = re.findall(r'i.*heard', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+            matchObj = re.findall(r'i.*read', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+            matchObj = re.findall(r'not.*sure', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+            matchObj = re.findall(r'referred.*me', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+            matchObj = re.findall(r'[^I].*mention', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+            matchObj = re.findall(r'((study|studies).*suggest)', ln, re.IGNORECASE)
+            regex_count = regex_count + matchObj.__len__()
+
+        if regex_count > 0:
+            trivial_score = trivial_score - 1
+
+        url_count = re.findall(r'(https?://[^\s]+)', line)
+
+        if url_count > 0:
+            trivial_score = trivial_score - 1
+
+        if abs(TextBlob(line).polarity) > 0.6:
+            trivial_score = trivial_score + 1
+        return trivial_score
+
+    def count_pronouns(text):
+        tagger = TextBlob(text).tags
+        print(tagger)
+        pron_list = []
+        count_prp = Counter(tag for word, tag in tagger if tag == 'PRP' or tag == 'PRP$')
+        count_nnp = Counter(tag for word, tag in tagger if tag == 'NNP')  # singular proper noun
+        for tag_pair in tagger:
+            if (tag_pair[1] == 'PRP') or (tag_pair[1] == 'PRP$') or (tag_pair[1] == 'WP') or (tag_pair[1] == 'WP$'):
+                pron_list.append(tag_pair[0])
+        print(count_prp['PRP'])
+        print(pron_list)
+
+        first_person_pron_list = ['I', 'me', 'mine', 'my', 'we', 'our', 'ours', 'us']
+        sec_person_pron_list = ['you', 'your', 'yours']
+        third_person_pron_list = ['he', 'she', 'it', 'his', 'hers', 'him', 'her', 'they', 'them', 'their', 'theirs',
+                                  'its']
+
+        pron_list = [item.lower() for item in pron_list]
+        first_person_pron_list = [item.lower() for item in first_person_pron_list]
+        sec_person_pron_list = [item.lower() for item in sec_person_pron_list]
+        third_person_pron_list = [item.lower() for item in third_person_pron_list]
+
+        count_first_per_pron = (set(first_person_pron_list) & set(pron_list)).__len__()
+        count_sec_per_pron = (set(sec_person_pron_list) & set(pron_list)).__len__()
+        count_third_per_pron = (set(third_person_pron_list) & set(pron_list)).__len__()
+
+        print(set(first_person_pron_list) & set(pron_list))
+        print(count_first_per_pron)
+
+        return [count_first_per_pron, count_sec_per_pron, count_third_per_pron, count_prp['PRP'] + count_prp['PRP$'],
+                len(pron_list), count_nnp['NNP']]
 
