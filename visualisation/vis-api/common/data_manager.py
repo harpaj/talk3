@@ -72,7 +72,7 @@ class DataManager(object):
         with open(definiton_file, 'r') as fh:
             reader = csv.reader(fh, skipinitialspace=True)
             for line in reader:
-                treatment_mapping[line[0]] = line[1:]
+                treatment_mapping[line[0].lower()] = line[1:]
         return treatment_mapping
 
     @staticmethod
@@ -99,7 +99,7 @@ class DataManager(object):
         # create groups of mentions per treatment, iterate
         for label, group in self.df.groupby("treatments"):
             data = {
-                "names": self.treatment_mapping[label],
+                "names": sorted(self.treatment_mapping[label.lower()]),
                 "treatment": label
             }
 

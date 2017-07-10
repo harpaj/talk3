@@ -1,48 +1,48 @@
-acamprosate, campral
-acoustic cr neuromodulation, acoustic coordinated reset neuromodulation,  neuromodulation, neuromodulator, anm, acrn, acm
-acupuncture
-AM-101, am101
-antidepressant, antidepressants, anti depressant, anti depressants, ssri, ssris, cymbalta, lexapro, effexor, zoloft, celexa, prozac, wellbutrin, citalopram, pristiq, amitriptyline, paxil, sertraline, remeron, mirtazapine, nortriptyline, venlafaxine, fluoxetine
-aripiprazole, abilify
-back-to-silence
-betahistine, betaserc, veserc, serc, hiserk, vergo
-cannabis, marijuana, cbd, cbds, cannabidiol, thc, tetrahydrocannabinol, hemp
-carbamazepine, tegretol, equetro
-caroverine, spasmium, spadon, tinnex
-cinnarizine, stugeron
-clonazepam, klonopin, rivotril
-cognitive behavioural therapy, cbt
-cranial therapy, cranial osteopathy, head massage
-earplanes,earplane
-flumazenil
-flupirtine
-gabapentin, neurontin, gaba
-ginkgo, biloba, ginko, tebonin
-hyperbaric oxygen therapy, hyperbaric, hbot, hbo
-levetiracetam,keppra
-lipoflavonoid
-low-level laser therapy, lllt, laser
-magnesium, magnesium citrate, magnesium chloride
-masking, masker, maskers
-melatonin
-melizine, postafen, bonine
-mutebutton
-nacetylcysteine, nac
-namenda, memantine
-neramexane
-neuromonics
-notched music therapy, music therapy, notched, nmt, audionotch
-otoharmonics
-pregabalin, lyrica
-retigabine, trobalt, potiga
-saffron
-salustim, tvns
-soundcure, serenade, universal sound therapy
-steroids, prednisone, prednisolone, prednazone, medrol, dexamethasone, lidocaine
-thiamine pyrophosphate, tpp
-tinnintus retraining therapy, trt, retraining
-topiramate, topamax
-transcranial magnetic stimulation, transcranial stimulation, rtms, tms, tdcs, tacs
-Vitamin B12, b12
-zinc
-zolpidem, ambien
+Acamprosate, Campral
+Acoustic CR Neuromodulation, Acoustic Coordinated Reset Neuromodulation,  neuromodulation, neuromodulator, ANM, ACRN, ACM
+Acupuncture
+AM-101, AM101
+Antidepressants, antidepressant, anti-depressant, anti-depressants, SSRI, SSRIs, Cymbalta, Lexapro, Effexor, Zoloft, Celexa, Prozac, Wellbutrin, Citalopram, Pristiq, Amitriptyline, Paxil, Sertraline, Remeron, Mirtazapine, Nortriptyline, Venlafaxine, Fluoxetine
+Aripiprazole, Abilify
+Back-To-Silence
+Betahistine, Betaserc, Veserc, Serc, Hiserk, Vergo
+Cannabis, marijuana, CBD, CBDs, cannabidiol, THC, tetrahydrocannabinol, hemp
+Carbamazepine, Tegretol, Equetro
+Caroverine, Spasmium, Spadon, Tinnex
+Cinnarizine, Stugeron
+Clonazepam, Klonopin, Rivotril
+Cognitive Behavioural Therapy, CBT
+Cranial Therapy, Cranial Osteopathy, head massage
+Earplanes, Earplane
+Flumazenil
+Flupirtine
+Gabapentin, Neurontin, Gaba
+Ginkgo, Biloba, Ginko, Tebonin
+Hyperbaric Oxygen Therapy, hyperbaric, HBOT, HBO
+Levetiracetam, Keppra
+Lipoflavonoid
+Low-level Laser Therapy, LLLT, laser
+Magnesium, magnesium citrate, magnesium chloride
+Masking, masker, maskers
+Melatonin
+Melizine, Postafen, Bonine
+Mutebutton
+Nacetylcysteine, NAC
+Namenda, Memantine
+Neramexane
+Neuromonics
+Notched Music Therapy, music therapy, notched, NMT, audionotch
+Otoharmonics
+Pregabalin, Lyrica
+Retigabine, Trobalt, Potiga
+Saffron
+Salustim, TVNS
+Soundcure, Serenade, Universal Sound Therapy
+Steroids, Prednisone, Prednisolone, Prednazone, Medrol, Dexamethasone, Lidocaine
+Thiamine Pyrophosphate, TPP
+Tinnintus Retraining Therapy, TRT, retraining
+Topiramate, Topamax
+Transcranial Magnetic Stimulation, transcranial stimulation, RTMS, TMS, TDCS, TACS
+Vitamin B12, B12
+Zinc
+Zolpidem, Ambien
