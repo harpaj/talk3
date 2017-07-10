@@ -203,6 +203,9 @@ p.explanation {
 
 .details-box.graph {
   height: 520px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
 }
 
 .details-box.info {

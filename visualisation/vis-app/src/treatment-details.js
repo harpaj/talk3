@@ -18,8 +18,9 @@ export class Overview {
     this.active_graph = "count";
   }
 
-  activate(params) {
+  activate(params, routeConfig) {
     this.name = params.name;
+    routeConfig.navModel.setTitle(params.name);
     return this.client.fetch(environment.api_base_url + '/treatment/' + params.name)
     .then(response => response.json())
     .then(data => {
