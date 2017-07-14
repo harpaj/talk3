@@ -7,7 +7,9 @@
           <p class="treatment-names">${treatment.names.join(', ')}</p>
         </div>
         <div class="details-exit pure-u-1-8">
-          <a class="details-exit-link" route-href="route: overview">🗙</a>
+          <a class="details-exit-link" route-href="route: overview">
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </a>
         </div>
     </div>
     <div class="hr"></div>
@@ -21,7 +23,7 @@
           <p class="box-content">
             ${treatment.total_cnt}
             <span class="${trend(treatment.previous_year_cnt, treatment.last_year_cnt, 'sentiment')}">
-              ${trend(treatment.previous_year_cnt, treatment.last_year_cnt, 'arrow')}
+              <i class="fa fa-arrow-circle-${trend(treatment.previous_year_cnt, treatment.last_year_cnt, 'arrow')}"></i>
             </span>
           </p>
           <p class="box-footer">
@@ -36,7 +38,7 @@
           <p class="box-content">
             ${decimals(treatment.total_pcnt)}%
             <span class="${trend(treatment.previous_year_pcnt, treatment.last_year_pcnt, 'sentiment')}">
-              ${trend(treatment.previous_year_pcnt, treatment.last_year_pcnt, 'arrow')}
+              <i class="fa fa-arrow-circle-${trend(treatment.previous_year_pcnt, treatment.last_year_pcnt, 'arrow')}"></i>
             </span>
           </p>
           <p class="box-footer">
@@ -51,7 +53,7 @@
           <p class="box-content ${(treatment.total_score > 0.05) ? 'pos' : (treatment.total_score < -0.05) ? 'neg' : 'neu'}">
             ${treatment.total_score.toFixed(2)}
             <span class="${trend(treatment.previous_year_score, treatment.last_year_score, 'sentiment')}">
-              ${trend(treatment.previous_year_score, treatment.last_year_score, 'arrow')}
+              <i class="fa fa-arrow-circle-${trend(treatment.previous_year_score, treatment.last_year_score, 'arrow')}"></i>
             </span>
           </p>
           <p class="box-footer">

@@ -41,7 +41,7 @@ export class Overview {
   trend(from, to, type) {
     var elements = {
       sentiment: ["pos", "neu", "neg"],
-      arrow: ["▲", "▶", "▼"],
+      arrow: ["up", "right", "down"],
       description: ["increased", "constant", "decreased"],
     }[type]
     if(to > (from * 1.02)) return elements[0];
