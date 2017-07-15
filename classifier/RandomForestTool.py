@@ -25,11 +25,11 @@ data_dir = '../data'
 
 #print(csv.field_size_limit())
 # Create a dataframe with the four feature variables
-df_train_set = pd.read_csv(data_dir + '/dataset_train.csv')
+df_train_set = pd.read_csv(data_dir + '/final_train_set.csv',encoding = 'iso-8859-1')
 #print("File dataset", df_train_set.head())
 df_train_set = pd.DataFrame(df_train_set)
 
-df_test_set = pd.read_csv(data_dir +'/dataset_test.csv')
+df_test_set = pd.read_csv(data_dir +'/final_test_set.csv',encoding ='iso-8859-1')
 
 df_final_set_original=pd.read_csv(data_dir +'/treatment_detected.csv')
 
