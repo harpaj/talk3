@@ -40,7 +40,7 @@ df_final_set_original=pd.read_csv(data_dir +'/treatment_detected.csv')
 #1.Pos-Neg Word Count Feature
 #For Training Data
 df_train_feat1 = sn.defsentfeatextractor(df_train_set)
-df_train_set = df_train_set.filter(['post_id', 'sentence', 'after', 'third', 'treatments', 'sentiment', 'factual'], axis=1)
+df_train_set = df_train_set.filter(['post_id', 'sentence','treatments', 'sentiment', 'factual'], axis=1)
 
 
 ##new data
@@ -52,7 +52,7 @@ print("final",df_final_set.head(10))
 
 #For Testing Data
 df_test_feat1 = sn.defsentfeatextractor(df_test_set)
-df_test_set = df_test_set.filter(['post_id', 'sentence', 'after', 'third', 'treatments', 'sentiment', 'factual'], axis=1)
+df_test_set = df_test_set.filter(['post_id', 'sentence','treatments', 'sentiment', 'factual'], axis=1)
 
 
 
@@ -77,9 +77,9 @@ df_test_set = pd.concat((df_test_set, tfidf_test_df), axis=1)
 
 #3. Polarity Score
 #For Training Data
-df_train_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
+df_train_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_train_set["sentence"].map(str)))
 #For Test Data
-df_test_set['polarity'] = pd.Series(TextBlob(x).polarity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
+df_test_set['polarity'] = pd.Series(TextBlob(x).polarity for x in  (df_test_set["sentence"].map(str)))
 #commented on 07-07-2017 by Atin
 #df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
 df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_final_set["sentence"].map(str))))
@@ -93,9 +93,9 @@ df_final_set['polarity']=pd.Series((TextBlob(x).polarity for x in (df_final_set[
 #4. Subjectivity Score
 #For Training Data
 
-df_train_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
+df_train_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_train_set["sentence"].map(str)))
 #For Test Data
-df_test_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)))
+df_test_set['subjectivity'] = pd.Series(TextBlob(x).subjectivity for x in (df_test_set["sentence"].map(str)))
 #commented on 07-07-2017 by Atin
 #df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_test_set["sentence"])))
 df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_final_set["sentence"].map(str))))
@@ -103,7 +103,7 @@ df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_final_
 
 #5. Personal Pronoun counts
 #Train Data
-df_pron_count_train = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_pron_count_train = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_train_set["sentence"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
 df_train_set = pd.concat((df_train_set, df_pron_count_train), axis=1)
 
 #For New Data
@@ -112,7 +112,7 @@ df_final_set = pd.concat((df_final_set, df_pron_count_final_set), axis=1)
 
 #5. Trivial Score
 #Train Data
-df_train_set['trivial_score'] = pd.Series(sn.get_trivial_score(x) for x in (df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)))
+df_train_set['trivial_score'] = pd.Series(sn.get_trivial_score(x) for x in (df_train_set["sentence"].map(str)))
 #For New Data
 df_final_set['trivial_score']= pd.Series((sn.get_trivial_score(x) for x in (df_final_set["sentence"].map(str))))
 
