@@ -130,7 +130,8 @@ for L in range(3, len(features_k)+1):
         #print("this",list(features_k))
         temp_df = pd.DataFrame(columns=list(subset))
         features = temp_df.columns
-        if len(features)>0:
+        #consider minimum features 5
+        if len(features)>5:
             #print(features)
             #features = df_train_set.columns[7:]
 
@@ -159,7 +160,9 @@ for L in range(3, len(features_k)+1):
             # Create a random forest classifier. By convention, clf means 'classifier'
 
             sample_wt = sklearn.utils.class_weight.compute_sample_weight(dict_cls_weight,Y)
+
             clf = RandomForestClassifier(n_jobs=1,class_weight=dict_cls_weight,random_state=67)
+
 
             # Train the classifier to take the training features and learn how they relate
             # to the training y (the species)
@@ -281,10 +284,20 @@ for L in range(3, len(features_k)+1):
             res = [list(features),list(clf.feature_importances_),sentiment_accuracy,factual_accuracy]
             print(res)
             df_csv = df_csv.append(pd.Series(res,index=df_csv.columns),ignore_index=True)
+            #print(df_csv.head(5))
+
             #ls_result.__add__(res)
 
 
 #ls_result.sort(key=lambda tup: tup[1])
+
 df_csv.to_csv(data_dir +'/feature_test.csv',index=False)
+
+#max accuracy for sentiment
+print("max sen",df_csv.loc[df_csv['Sentiment-Accuracy'].idxmax()])
+#max accuracy for factuality
+print("max fact",df_csv.loc[df_csv['Factual Accuracy'].idxmax()])
+df_csv.to_csv(data_dir +'/feature_test.csv')
+
 #print(ls_result)
 
