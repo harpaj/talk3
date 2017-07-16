@@ -106,6 +106,11 @@ df_final_set['subjectivity']=pd.Series((TextBlob(x).polarity for x in (df_final_
 df_pron_count_train = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_train_set["sentence"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
 df_train_set = pd.concat((df_train_set, df_pron_count_train), axis=1)
 
+#Test Data
+df_pron_count_test = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_test_set["sentence"].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
+df_test_set = pd.concat((df_test_set, df_pron_count_test), axis=1)
+
+#Added for Test Set 16-07-2017 Atin
 #For New Data
 df_pron_count_final_set = pd.DataFrame((list(sn.count_pronouns(x)) for x in df_final_set['sentence'].map(str)),columns=['first_per_pron','sec_per_pron','Third_per_pron','personal_pron','total_pron','sing_proper_noun'])
 df_final_set = pd.concat((df_final_set, df_pron_count_final_set), axis=1)
@@ -113,6 +118,11 @@ df_final_set = pd.concat((df_final_set, df_pron_count_final_set), axis=1)
 #5. Trivial Score
 #Train Data
 df_train_set['trivial_score'] = pd.Series(sn.get_trivial_score(x) for x in (df_train_set["sentence"].map(str)))
+
+#Added for Test Set 16-07-2017 Atin
+#Test Data
+df_test_set['trivial_score'] = pd.Series(sn.get_trivial_score(x) for x in (df_test_set["sentence"].map(str)))
+
 #For New Data
 df_final_set['trivial_score']= pd.Series((sn.get_trivial_score(x) for x in (df_final_set["sentence"].map(str))))
 
@@ -132,11 +142,25 @@ print(df_final_set.head(2))
 
 #Preprocess Data
 # Create a list of the feature column's names
-features = df_train_set.columns[7:]
+
+#Putting Final 8 Features 16-07-2017 Atin
+features = df_train_set.columns[5:]
+list_feat = list(features)
+list_feat.remove('negative_word_count')
+list_feat.remove('Third_per_pron')
+list_feat.remove('polarity')
+list_feat.remove('subjectivity')
+temp_df = pd.DataFrame(columns=list_feat)
+features = temp_df.columns
+
+
 final_features=pd.DataFrame
 #changed on 07-07-2017 by Atin
 #final_features=df_final_set[['negative_word_count','positive_word_count','polarity','subjectivity','vander_score']]
-final_features=df_final_set[['polarity', 'subjectivity', 'first_per_pron', 'sec_per_pron', 'Third_per_pron', 'personal_pron', 'total_pron', 'sing_proper_noun', 'trivial_score', 'negative_word_count', 'positive_word_count', 'vander_score']]
+
+#Changing to Final 8 feature 16-07-2017 Atin
+#final_features=df_final_set[['polarity', 'subjectivity', 'first_per_pron', 'sec_per_pron', 'Third_per_pron', 'personal_pron', 'total_pron', 'sing_proper_noun', 'trivial_score', 'negative_word_count', 'positive_word_count', 'vander_score']]
+final_features=df_final_set[[ 'first_per_pron', 'sec_per_pron',  'personal_pron', 'total_pron', 'sing_proper_noun', 'trivial_score',  'positive_word_count', 'vander_score']]
 print("Features:",features)
 print("Final fe",final_features.head(50))
 
@@ -177,12 +201,17 @@ print(len(y2))
 
 
 Y=np.column_stack((y,y2))
-dict_cls_weight = [{0:1,1:5,2:5},{0:1,1:1}]
+
+#Changed on 16-07-2017 Atin
+#dict_cls_weight = [{0:1,1:5,2:5},{0:1,1:1}]
+dict_cls_weight ='balanced'
 #Train The Random Forest Classifier
 # Create a random forest classifier. By convention, clf means 'classifier'
 
 sample_wt = sklearn.utils.class_weight.compute_sample_weight(dict_cls_weight,Y)
-clf = RandomForestClassifier(n_jobs=2,class_weight=dict_cls_weight)
+
+#Added Random State 16-07-2017 Atin
+clf = RandomForestClassifier(n_jobs=1,class_weight=dict_cls_weight,random_state=56)
 
 # Train the classifier to take the training features and learn how they relate
 # to the training y (the species)
