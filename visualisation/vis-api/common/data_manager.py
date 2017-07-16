@@ -177,6 +177,8 @@ class DataManager(object):
             month_groups['month'] = month_groups.index
             treatment_graph_data[label] = month_groups
 
+            # choose example threads and sentences per treatment
+            # # take the five most frequent threads
             thread_groups = sorted(
                 list(group.drop_duplicates("post_id").groupby("thread_id", sort=False)),
                 key=lambda tg: len(tg[1]),
@@ -185,6 +187,7 @@ class DataManager(object):
 
             detailed_data = data.copy()
 
+            # # take five hopefully interesting sentences per thread
             threads = []
             for thread, thread_group in thread_groups:
                 thread_name = thread_group["thread_name"].iloc[0]
@@ -203,7 +206,5 @@ class DataManager(object):
                 })
             detailed_data["threads"] = threads
             treatment_detailed_data[label] = detailed_data
-
-            # break
 
         return treatment_summaries, treatment_graph_data, treatment_detailed_data

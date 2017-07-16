@@ -26,6 +26,7 @@ class GraphDrawer(object):
         )
 
     def get_treatment_score_graphs(self):
+        """precalculates the score graphs for all treatment"""
         graphs = {}
         for treatment, data in self.dm.treatment_graphs.items():
             p = figure(
@@ -40,10 +41,13 @@ class GraphDrawer(object):
                 # sizing_mode='stretch_both',
             )
             p.line("month", "score", line_width=2, source=data, color="black")
+
+            # red/green background
             pos_box = BoxAnnotation(bottom=0, top=1, fill_alpha=0.1, fill_color='#5fad56')
             neg_box = BoxAnnotation(bottom=-1, top=0, fill_alpha=0.1, fill_color='#df2935')
             p.add_layout(pos_box)
             p.add_layout(neg_box)
+
             graphs[treatment] = components(p)
         return graphs
 
@@ -58,15 +62,15 @@ class GraphDrawer(object):
         return areas
 
     def get_treatment_count_graphs(self, relative):
+        """ precalculates the treatment freuency graphs, either relative or not,
+            for all treatments """
         graphs = {}
         elements = ["pos_cnt", "neu_cnt", "neg_cnt", "pos+neu_cnt", "all_cnt"]
         if relative:
             elements = ["pos_rel", "neu_rel", "neg_rel", "pos+neu_rel", "all_rel"]
         categories = elements[:3]
         for treatment, data in self.dm.treatment_graphs.items():
-            areas = self.stacked(data, categories)
-            months = list(data["month"])
-            x2 = np.hstack((months[::-1], months))
+            # set up the basic figure properties
             p = figure(
                 y_axis_label='% of posts' if relative else 'posts',
                 x_axis_type='datetime',
@@ -78,6 +82,7 @@ class GraphDrawer(object):
                 plot_height=500
                 # sizing_mode='stretch_both',
             )
+            # add hover tool
             hover = HoverTool(names=["pos", "neu", "neg"])
             hover.tooltips = [
                 ("month", "@month{%B %Y}"),
@@ -88,9 +93,16 @@ class GraphDrawer(object):
             ]
             hover.formatters = {"month": "datetime"}
             p.add_tools(hover)
+
+            # calculate and add stacked patches
+            areas = self.stacked(data, categories)
+            months = list(data["month"])
+            x2 = np.hstack((months[::-1], months))
             p.patches(
                 [x2] * len(areas), [areas[cat] for cat in categories],
                 color=["#5fad56", "#f2c14e", "#df2935"], alpha=0.8, line_color=None)
+
+            # add lines for the different sentiment - these are required for the hover to work
             data_source = ColumnDataSource.from_df(data)
             p.line("month", elements[0], color="#5fad56", legend="positive", name="pos", source=data_source)
             p.line("month", elements[3], color="#f2c14e", legend="neutral", name="neu", source=data_source)
