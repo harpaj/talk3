@@ -52,7 +52,7 @@ df_test_set = df_test_set.filter(['post_id', 'sentence','treatments', 'sentiment
 #Train Data
 """
 vectorizer = TfidfVectorizer(min_df=1)
-tfidf = vectorizer.fit_transform(df_train_set["sentence"].map(str) + "'\n'" + df_train_set["after"].map(str) + "'\n'" + df_train_set["third"].map(str)).toarray()
+tfidf = vectorizer.fit_transform(df_train_set["sentence"].map(str) ).toarray()
 tfidf_train_df = pd.DataFrame(tfidf, columns=[("tfidf_" + str(i)) for i in range(len(tfidf[0]))])
 df_train_set = pd.concat((df_train_set, tfidf_train_df), axis=1)
 
@@ -61,7 +61,7 @@ print(tfidf)
 #print(df)
 
 #Test Data
-tfidf2 = vectorizer.transform(df_test_set["sentence"].map(str) + "'\n'" + df_test_set["after"].map(str) + "'\n'" + df_test_set["third"].map(str)).toarray()
+tfidf2 = vectorizer.transform(df_test_set["sentence"].map(str) ).toarray()
 tfidf_test_df = pd.DataFrame(tfidf2, columns=[("tfidf_" + str(i)) for i in range(len(tfidf2[0]))])
 df_test_set = pd.concat((df_test_set, tfidf_test_df), axis=1)
 """
@@ -121,7 +121,7 @@ df_csv = pd.DataFrame(columns=['Features','Feature_importance','Sentiment-Accura
 
 #print(features_k)
 
-for L in range(3, len(features_k)+1):
+for L in range(4, len(features_k)+1):
     for subset in combinations(features_k, L):
 
         #features_k = df_train_set.columns[m:n+1]
@@ -131,7 +131,7 @@ for L in range(3, len(features_k)+1):
         temp_df = pd.DataFrame(columns=list(subset))
         features = temp_df.columns
         #consider minimum features 5
-        if len(features)>5:
+        if len(features)>3:
             #print(features)
             #features = df_train_set.columns[7:]
 
@@ -154,14 +154,14 @@ for L in range(3, len(features_k)+1):
 
 
             Y=np.column_stack((y,y2))
-            dict_cls_weight = [{0:1,1:5,2:5},{0:1,1:1}]
+            dict_cls_weight = 'balanced'#[{0:5,1:1,2:5},{0:1,1:1}]
 
             #Train The Random Forest Classifier
             # Create a random forest classifier. By convention, clf means 'classifier'
 
             sample_wt = sklearn.utils.class_weight.compute_sample_weight(dict_cls_weight,Y)
 
-            clf = RandomForestClassifier(n_jobs=1,class_weight=dict_cls_weight,random_state=67)
+            clf = RandomForestClassifier(n_jobs=1,class_weight=dict_cls_weight,random_state=56)
 
 
             # Train the classifier to take the training features and learn how they relate
@@ -297,7 +297,7 @@ df_csv.to_csv(data_dir +'/feature_test.csv',index=False)
 print("max sen",df_csv.loc[df_csv['Sentiment-Accuracy'].idxmax()])
 #max accuracy for factuality
 print("max fact",df_csv.loc[df_csv['Factual Accuracy'].idxmax()])
-df_csv.to_csv(data_dir +'/feature_test.csv')
+#df_csv.to_csv(data_dir +'/feature_test.csv')
 
 #print(ls_result)
 
