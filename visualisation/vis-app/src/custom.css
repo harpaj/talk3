@@ -1,5 +1,3 @@
-/* https://coolors.co/92374d-25291c-66717e-e4dfda-ffffff */
-
 .content {
   max-width: 1200px;
   margin-left: auto;
@@ -176,7 +174,7 @@ p.explanation {
   background-color: #f5f5f5;
   padding: 10px;
   border: 1px solid #eee;
-  color: 131517;
+  color: #131517;
 }
 
 .details-exit {
