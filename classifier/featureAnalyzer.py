@@ -4,13 +4,9 @@ import nltk
 import string
 from collections import Counter
 import re
-import datetime
-import matplotlib.pyplot as plt
-import math
-import random as random
 from textblob import TextBlob
 
-from nltk.corpus import stopwords
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 class feat_analyser:
@@ -77,25 +73,23 @@ class feat_analyser:
         data_review['word_count'] = data_review['tokens'].apply(len)
 
         #positive words
-
         #print(positive_words.intersection(data_review.get_value(0, 'tokens')))
         data_review['positive_word_count'] = data_review['tokens'].apply(lambda tokens: len(positive_words.intersection(tokens)))
-
         #print(data_review['positive_word_count'] )
 
+        #negative words
         data_review['negative_word_count'] = data_review['tokens'].apply(lambda tokens: len(negative_words.intersection(tokens)))
-
         data_review= data_review[['negative_word_count','positive_word_count','tokens']]
         #print(data_review[['negative_word_count','positive_word_count'] ])
 
-
+        """
         for index, row in data_review.iterrows():
             # print(row['tokens'])
             cleaned_text = filter(lambda x: x not in stop_words, row['tokens'])
             wordlist = nltk.FreqDist(cleaned_text)
             word_features = wordlist.items()
             #print(word_features)
-
+        """
         #print(data_review.head(20))
 
         def print_sentiment_scores(sentence):
@@ -110,7 +104,7 @@ class feat_analyser:
 
 
 
-
+#function to get trivial score
 
     def get_trivial_score(line):
         trivial_score = 2
@@ -142,6 +136,7 @@ class feat_analyser:
         if abs(TextBlob(line).polarity) > 0.6:
             trivial_score = trivial_score + 1
         return trivial_score
+
 
     def count_pronouns(text):
         tagger = TextBlob(text).tags
